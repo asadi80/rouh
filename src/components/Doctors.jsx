@@ -18,7 +18,7 @@ export default function Doctors() {
           {doctors.map((doc) => (
             <article className="doctor-card" key={doc.id}>
               <div className="doctor-card__top">
-                {doc.photo ? (
+                {doc.image ? (
                   <img
                     src={doc.image}
                     alt={doc.name}
