@@ -121,6 +121,61 @@
   object-fit: contain;
 }
 
+/* Add to Hero.css */
+.hero__logo-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden; /* Ensures the image stays within the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+}
+
+.hero__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* If you want to keep the dashed ring animation but make logo circular */
+.hero__art-ring {
+  position: relative;
+  width: min(360px, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  padding: 30px;
+  overflow: hidden; /* Add this to ensure children don't overflow */
+}
+
+.hero__art-ring::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--sage-300);
+  animation: spin 40s linear infinite;
+  pointer-events: none; /* Allows clicking through the ring */
+  z-index: 2; /* Keep ring above the image */
+}
+
+/* Make sure the image is inside the ring but below the dashed border */
+.hero__art-ring img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

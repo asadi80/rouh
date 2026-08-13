@@ -42,7 +42,9 @@ export default function Hero() {
 
         <div className="hero__art">
           <div className="hero__art-ring">
-            <img src={logo} alt={clinicInfo.name} />
+            <div className="hero__logo-wrapper">
+              <img src={logo} alt={clinicInfo.name} className="hero__logo" />
+            </div>
           </div>
         </div>
       </div>
