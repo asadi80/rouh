@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'icons/*.png'],
       manifest: {
-        name: 'عيادة الشفاء للطب النفسي',
-        short_name: 'عيادة الشفاء',
-        description: 'عيادة الشفاء للطب النفسي والاستشارات النفسية',
+        name: 'مصحة روح للطب النفسي',
+        short_name: 'مصحة روح',
+        description: 'مصحة روح للطب النفسي والاستشارات النفسية',
         lang: 'ar',
         dir: 'rtl',
         theme_color: '#ffffff',
