@@ -15,10 +15,11 @@ export const clinicInfo = {
   email: "clinic@rouh.ly",
   address: "شارع الشيخ - النوفلين - طرابلس - ليبيا",
   // رابط "المشاركة" من خرائط Google لموقع العيادة (اضغط "مشاركة" في تطبيق الخرائط وانسخ الرابط هنا)
-  googleMapsUrl: "https://maps.app.goo.gl/g47RjiWgppxAFgvr9",
+  googleMapsUrl: "https://maps.app.goo.gl/PwjRQEEHsozMeLy16",
+  
   // رابط تضمين (Embed) من خرائط Google لعرض الخريطة داخل الصفحة
   googleMapsEmbedUrl:
-    "https://www.google.com/maps/embed?pb=%211m18%211m12%211m3%211d3350.396063459948%212d13.2195436%213d32.8876951%212m3%211f0%212f0%213f0%213m2%211i1024%212i768%214f13.1%213m3%211m2%211s0x13a893006246242b%3A0xe54b393e6b8fd2c8%212z2YXYtdit2Kkg2LHZiNitINmE2YTYt9ioINin2YTZhtmB2LPZig%215e0%213m2%211sen%212sus%214v1786578626902%215m2%211sen%212sus&utm_source=chatgpt.com",
+     "https://www.google.com/maps?q=32.88791132521724,13.21959187976219&hl=ar&z=15&output=embed",
 };
 
 export const socialLinks = [
