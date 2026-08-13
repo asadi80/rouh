@@ -46,6 +46,15 @@
   justify-content: center;
 }
 
+.doctor-card__photo {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--sage-300);
+}
+
 .doctor-card__top h3 {
   font-size: 17px;
   font-weight: 700;
