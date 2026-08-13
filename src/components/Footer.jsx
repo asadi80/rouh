@@ -49,7 +49,7 @@ export default function Footer() {
           <h4>أوقات العمل</h4>
           <p>{todayHours ? `${todayHours.hours}` : "—"}</p>
           <p className="footer-note">السبت – الخميس (الجمعة إجازة)</p>
-          <p className="footer-note"> "9:00 م – 3:00 م"</p>
+          <p className="footer-note"> 3:00 م – 9:00 م</p>
           <p className="footer-note">الجمعة</p>
         </div>
       </div>
