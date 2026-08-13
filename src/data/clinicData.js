@@ -39,7 +39,7 @@ export const workingHours = [
   { day: "الثلاثاء", hours: "9:00 ص – 9:00 م", isOpen: true },
   { day: "الأربعاء", hours: "9:00 ص – 9:00 م", isOpen: true },
   { day: "الخميس", hours: "9:00 ص – 5:00 م", isOpen: true },
-  { day: "الجمعة", hours: "مغلق", isOpen: false },
+  { day: "الجمعة", hours: "3:00 م – 9:00 م", isOpen: true },
 ];
 
 // قائمة الأطباء وجداولهم — أضف أو عدّل الأطباء هنا
