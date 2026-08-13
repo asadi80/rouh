@@ -18,7 +18,15 @@ export default function Doctors() {
           {doctors.map((doc) => (
             <article className="doctor-card" key={doc.id}>
               <div className="doctor-card__top">
-                <div className="doctor-card__avatar">{doc.initials}</div>
+                {doc.photo ? (
+                  <img
+                    src={doc.photo}
+                    alt={doc.name}
+                    className="doctor-card__photo"
+                  />
+                ) : (
+                  <div className="doctor-card__avatar">{doc.initials}</div>
+                )}
                 <div>
                   <h3>{doc.name}</h3>
                   <p className="doctor-card__title">{doc.title}</p>
