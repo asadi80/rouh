@@ -20,7 +20,7 @@ export default function Doctors() {
               <div className="doctor-card__top">
                 {doc.photo ? (
                   <img
-                    src={doc.photo}
+                    src={doc.image}
                     alt={doc.name}
                     className="doctor-card__photo"
                   />
