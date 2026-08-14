@@ -4,8 +4,20 @@
 // ============================================================
 
 // لإضافة صورة طبيب: ضع الملف داخل src/assets/doctors/ ثم فعّل السطر التالي
-import {essraPhoto, eiman, muna, albaden, hadel, altwati, joud, mawada, mustafa, rahaf, razan, retag, safa, shahed} from "../assets/doctors";
-
+import essraPhoto from "./essra.jpg";
+import eiman from "./eiman.jpg";
+import muna from "./muna.jpg";
+import albaden from "./albaden.jpg";
+import hadel from "./hadel.jpg";
+import altwati from "./altwati.jpg";
+import joud from "./joud.jpg";
+import mawada from "./mawada.jpg";
+import mustafa from "./mustafa.jpg";
+import rahaf from "./rahaf.jpg";
+import razan from "./razan.jpg";
+import retag from "./retag.jpg";
+import safa from "./safa.jpg";
+import shahed from "./shahed.jpg";
 export const clinicInfo = {
   name: "مصحة روح للطب النفسي",
   shortName: "مصحة روح",
