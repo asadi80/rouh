@@ -4,20 +4,20 @@
 // ============================================================
 
 // لإضافة صورة طبيب: ضع الملف داخل src/assets/doctors/ ثم فعّل السطر التالي
-import essraPhoto from "./essra.jpg";
-import eiman from "./eiman.jpg";
-import muna from "./muna.jpg";
-import albaden from "./albaden.jpg";
-import hadel from "./hadel.jpg";
-import altwati from "./altwati.jpg";
-import joud from "./joud.jpg";
-import mawada from "./mawada.jpg";
-import mustafa from "./mustafa.jpg";
-import rahaf from "./rahaf.jpg";
-import razan from "./razan.jpg";
-import retag from "./retag.jpg";
-import safa from "./safa.jpg";
-import shahed from "./shahed.jpg";
+import essraPhoto from "../assets/doctors/essra.jpg";
+import eiman from "../assets/doctors/eiman.jpg";
+import muna from "../assets/doctors/muna.jpg";
+import albaden from "../assets/doctors/albaden.jpg";
+import hadel from "../assets/doctors/hadel.jpg";
+import altwati from "../assets/doctors/altwati.jpg";
+import joud from "../assets/doctors/joud.jpg";
+import mawada from "../assets/doctors/mawada.jpg";
+import mustafa from "../assets/doctors/mustafa.jpg";
+import rahaf from "../assets/doctors/rahaf.jpg";
+import razan from "../assets/doctors/razan.jpg";
+import retag from "../assets/doctors/retag.jpg";
+import safa from "../assets/doctors/safa.jpg";
+import shahed from "../assets/doctors/shahed.jpg";
 export const clinicInfo = {
   name: "مصحة روح للطب النفسي",
   shortName: "مصحة روح",
