@@ -11,13 +11,13 @@ import albaden from "../assets/doctors/albaden.jpg";
 import hadel from "../assets/doctors/hadel.jpg";
 import altwati from "../assets/doctors/altwati.jpg";
 import joud from "../assets/doctors/joud.jpg";
-import mawada from "../assets/doctors/mawada.jpg";
 import mustafa from "../assets/doctors/mustafa.jpg";
 import rahaf from "../assets/doctors/rahaf.jpg";
 import razan from "../assets/doctors/razan.jpg";
 import retag from "../assets/doctors/retag.jpg";
 import safa from "../assets/doctors/safa.jpg";
 import shahed from "../assets/doctors/shahed.jpg";
+
 export const clinicInfo = {
   name: "مصحة روح للطب النفسي",
   shortName: "مصحة روح",
@@ -29,32 +29,22 @@ export const clinicInfo = {
   whatsapp: "218916669082",
   email: "clinic@rouh.ly",
   address: "شارع الشيخ - النوفلين - طرابلس - ليبيا",
-  // رابط "المشاركة" من خرائط Google لموقع العيادة (اضغط "مشاركة" في تطبيق الخرائط وانسخ الرابط هنا)
   googleMapsUrl: "https://maps.app.goo.gl/yZhunz2nXeEBop1d8",
-  // رابط تضمين (Embed) من خرائط Google لعرض الخريطة داخل الصفحة
   googleMapsEmbedUrl:
     "https://www.google.com/maps?q=32.88791132521724,13.21959187976219&hl=ar&z=15&output=embed",
 };
 
 export const socialLinks = [
-  {
-    id: "instagram",
-    label: "انستغرام",
-    url: "https://instagram.com/",
-  },
+  { id: "instagram", label: "انستغرام", url: "https://instagram.com/alshifa.clinic" },
   { id: "whatsapp", label: "واتساب", url: "https://wa.me/218916669082" },
-  { id: "twitter", label: "X (تويتر)", url: "https://x.com" },
+  { id: "twitter", label: "X (تويتر)", url: "https://x.com/alshifa_clinic" },
   {
     id: "facebook",
     label: "فيسبوك",
     url: "https://www.facebook.com/p/%D9%85%D8%B5%D8%AD%D8%A9-%D8%B1%D9%88%D8%AD-%D9%84%D9%84%D8%B7%D8%A8-%D8%A7%D9%84%D9%86%D9%81%D8%B3%D9%8A-61584759076913/",
   },
-  { id: "tiktok", label: "تيك توك", url: "https://tiktok.com/" },
-  {
-    id: "snapchat",
-    label: "سناب شات",
-    url: "https://snapchat.com/",
-  },
+  { id: "tiktok", label: "تيك توك", url: "https://tiktok.com/@alshifa.clinic" },
+  { id: "snapchat", label: "سناب شات", url: "https://snapchat.com/add/alshifa.clinic" },
 ];
 
 // أوقات العمل الأسبوعية
@@ -69,12 +59,6 @@ export const workingHours = [
 ];
 
 // قائمة الأطباء وجداولهم — أضف أو عدّل الأطباء هنا
-//
-// حقل "image": اختياري. اتركه فارغًا (null) وستظهر دائرة بالأحرف الأولى تلقائيًا.
-// لإضافة صورة لاحقًا:
-//   1) ضع ملف الصورة داخل src/assets/doctors/ (مثال: essra.jpg)
-//   2) فعّل سطر الاستيراد أعلى هذا الملف (import essraPhoto from ...)
-//   3) استخدمه في الحقل: image: essraPhoto
 export const doctors = [
   {
     id: 1,
@@ -121,8 +105,7 @@ export const doctors = [
     id: 4,
     name: "د. رزان الضاوي",
     title: "أخصائية علاج نفسي",
-    specialty:
-      "اضطرابات الشخصية الحدية (BPD)، ضبط التقلبات الانفعالية، الاكتئاب المستمر",
+    specialty: "اضطرابات الشخصية الحدية (BPD)، ضبط التقلبات الانفعالية، الاكتئاب المستمر",
     initials: "د.ر",
     image: razan,
     bio: "أخصائية علاج نفسي بخبرة 5 سنوات، خبرة إكلينيكية في الدعم النفسي لاضطرابات الشخصية الحدية وضبط التقلبات الانفعالية، وعلاج أعراض الاكتئاب المستمر.",
@@ -240,8 +223,7 @@ export const doctors = [
     id: 14,
     name: "د. مودة التواتي",
     title: "أخصائية علاج نفسي",
-    specialty:
-      "دعم الشخصية الحدية، استقرار المشاعر، الاكتئاب، تطوير السمات الشخصية",
+    specialty: "دعم الشخصية الحدية، استقرار المشاعر، الاكتئاب، تطوير السمات الشخصية",
     initials: "د.م",
     image: altwati,
     bio: "أخصائية علاج نفسي بخبرة 5 سنوات، خبرة في دعم حالات الشخصية الحدية واستقرار المشاعر، ومساعدة المراجعين في علاج الاكتئاب وفهم السمات الشخصية وتطويرها.",
@@ -260,69 +242,20 @@ export const stats = [
 
 // خدماتنا — أضف أو عدّل الخدمات هنا
 export const services = [
-  {
-    icon: "🧠",
-    title: "الطب النفسي",
-    desc: "تشخيص وعلاج الاضطرابات النفسية والعقلية بأحدث البروتوكولات العلمية العالمية.",
-  },
-  {
-    icon: "💬",
-    title: "العلاج النفسي",
-    desc: "جلسات علاج نفسي فردي وجماعي وأسري بأساليب متنوعة كالعلاج المعرفي السلوكي.",
-  },
-  {
-    icon: "🔄",
-    title: "علاج الإدمان",
-    desc: "برامج متكاملة تشمل إزالة السموم والتأهيل النفسي والاجتماعي والمتابعة طويلة الأمد.",
-  },
-  {
-    icon: "👨‍👩‍👧",
-    title: "الإرشاد الأسري",
-    desc: "دعم نفسي للأسر وبرامج لتحسين التواصل الأسري وفهم طبيعة المرض النفسي.",
-  },
-  {
-    icon: "📋",
-    title: "التقييم النفسي",
-    desc: "اختبارات ومقاييس نفسية معتمدة لتقييم الحالة النفسية وتقديم تقارير مفصلة.",
-  },
-  {
-    icon: "🤝",
-    title: "دعم نفسي اجتماعي",
-    desc: "جلسات دعم نفسي واجتماعي لمساعدة الأفراد على التكيف وتعزيز الصحة النفسية.",
-  },
+  { icon: "🧠", title: "الطب النفسي", desc: "تشخيص وعلاج الاضطرابات النفسية والعقلية بأحدث البروتوكولات العلمية العالمية." },
+  { icon: "💬", title: "العلاج النفسي", desc: "جلسات علاج نفسي فردي وجماعي وأسري بأساليب متنوعة كالعلاج المعرفي السلوكي." },
+  { icon: "🔄", title: "علاج الإدمان", desc: "برامج متكاملة تشمل إزالة السموم والتأهيل النفسي والاجتماعي والمتابعة طويلة الأمد." },
+  { icon: "👨‍👩‍👧", title: "الإرشاد الأسري", desc: "دعم نفسي للأسر وبرامج لتحسين التواصل الأسري وفهم طبيعة المرض النفسي." },
+  { icon: "📋", title: "التقييم النفسي", desc: "اختبارات ومقاييس نفسية معتمدة لتقييم الحالة النفسية وتقديم تقارير مفصلة." },
+  { icon: "🤝", title: "دعم نفسي اجتماعي", desc: "جلسات دعم نفسي واجتماعي لمساعدة الأفراد على التكيف وتعزيز الصحة النفسية." },
 ];
 
 // لماذا نحن؟ — أضف أو عدّل النقاط هنا
 export const whyUs = [
-  {
-    icon: "🎓",
-    title: "كفاءة طبية عالية",
-    desc: "أطباء وأخصائيون حاصلون على مؤهلات علمية معتمدة",
-  },
-  {
-    icon: "🌿",
-    title: "بيئة علاجية شافية",
-    desc: "بيئة مريحة وهادئة تساعد على التعافي السريع",
-  },
-  {
-    icon: "🔐",
-    title: "سرية تامة ومطلقة",
-    desc: "نلتزم بأعلى معايير السرية الطبية وحماية خصوصيتكم",
-  },
-  {
-    icon: "💚",
-    title: "رعاية إنسانية دافئة",
-    desc: "نتعامل مع كل حالة باحترام وتعاطف حقيقي",
-  },
-  {
-    icon: "⏰",
-    title: "إتاحة واسعة",
-    desc: "سبعة أيام في الأسبوع بفترتين صباحية ومسائية",
-  },
-  {
-    icon: "🔬",
-    title: "أساليب علاجية حديثة",
-    desc: "أحدث البروتوكولات في الطب النفسي وعلم النفس الإكلينيكي",
-  },
+  { icon: "🎓", title: "كفاءة طبية عالية", desc: "أطباء وأخصائيون حاصلون على مؤهلات علمية معتمدة" },
+  { icon: "🌿", title: "بيئة علاجية شافية", desc: "بيئة مريحة وهادئة تساعد على التعافي السريع" },
+  { icon: "🔐", title: "سرية تامة ومطلقة", desc: "نلتزم بأعلى معايير السرية الطبية وحماية خصوصيتكم" },
+  { icon: "💚", title: "رعاية إنسانية دافئة", desc: "نتعامل مع كل حالة باحترام وتعاطف حقيقي" },
+  { icon: "⏰", title: "إتاحة واسعة", desc: "سبعة أيام في الأسبوع بفترتين صباحية ومسائية" },
+  { icon: "🔬", title: "أساليب علاجية حديثة", desc: "أحدث البروتوكولات في الطب النفسي وعلم النفس الإكلينيكي" },
 ];
-
