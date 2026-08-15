@@ -35,16 +35,16 @@ export const clinicInfo = {
 };
 
 export const socialLinks = [
-  { id: "instagram", label: "انستغرام", url: "https://instagram.com/alshifa.clinic" },
+  { id: "instagram", label: "انستغرام", url: "https://instagram.com/" },
   { id: "whatsapp", label: "واتساب", url: "https://wa.me/218916669082" },
-  { id: "twitter", label: "X (تويتر)", url: "https://x.com/alshifa_clinic" },
+  { id: "twitter", label: "X (تويتر)", url: "https://x.com/" },
   {
     id: "facebook",
     label: "فيسبوك",
     url: "https://www.facebook.com/p/%D9%85%D8%B5%D8%AD%D8%A9-%D8%B1%D9%88%D8%AD-%D9%84%D9%84%D8%B7%D8%A8-%D8%A7%D9%84%D9%86%D9%81%D8%B3%D9%8A-61584759076913/",
   },
-  { id: "tiktok", label: "تيك توك", url: "https://tiktok.com/@alshifa.clinic" },
-  { id: "snapchat", label: "سناب شات", url: "https://snapchat.com/add/alshifa.clinic" },
+  { id: "tiktok", label: "تيك توك", url: "https://tiktok.com/" },
+  { id: "snapchat", label: "سناب شات", url: "https://snapchat.com/" },
 ];
 
 // أوقات العمل الأسبوعية
