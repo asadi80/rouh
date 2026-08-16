@@ -8,7 +8,7 @@ export default function Services() {
         <div className="section-head">
           <span className="eyebrow">خدماتنا</span>
           <h2>ما نُقدّمه لكم</h2>
-          <p>خدمات طبية ونفسية متكاملة تحت سقف واحد.</p>
+          <p>تقدم مصحة روح للطب النفسي مجموعة متكاملة من الخدمات النفسية والعلاجية، من خلال فريق متخصص، بهدف تقديم الرعاية المناسبة لكل حالة وفق احتياجاتها.</p>
         </div>
 
         <div className="services__grid">
