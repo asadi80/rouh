@@ -6,15 +6,13 @@ export default function PulseDivider({ flat = false }) {
       <svg viewBox="0 0 600 60" preserveAspectRatio="none">
         <path
           className="pulse-line pulse-line--track"
-          d="M0 30 H215 L223 30 L231 4 L241 56 L251 18 L259 30 L267 30 L275 12 L283 30 H600"
+          d="M0 30 H220 L245 8 L262 52 L280 18 L296 42 L312 30 H600"
         />
         <path
           className="pulse-line pulse-line--draw"
-          d="M0 30 H215 L223 30 L231 4 L241 56 L251 18 L259 30 L267 30 L275 12 L283 30 H600"
+          d="M0 30 H220 L245 8 L262 52 L280 18 L296 42 L312 30 H600"
         />
-        
       </svg>
-      
     </div>
   );
 }

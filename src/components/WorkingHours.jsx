@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { workingHours } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { ClockIcon } from "./Icons";
 import "./WorkingHours.css";
 
@@ -7,6 +7,7 @@ import "./WorkingHours.css";
 const jsDayToLabel = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
 
 export default function WorkingHours() {
+  const { workingHours } = useClinicData();
   const todayLabel = useMemo(() => jsDayToLabel[new Date().getDay()], []);
 
   return (

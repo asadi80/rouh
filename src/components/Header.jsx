@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
-import { clinicInfo } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { MenuIcon, CloseIcon, PhoneIcon } from "./Icons";
 import "./Header.css";
 
 const navLinks = [
   { href: "#home", label: "الرئيسية" },
+  { href: "#services", label: "خدماتنا" },
   { href: "#doctors", label: "الأطباء" },
   { href: "#hours", label: "أوقات العمل" },
   { href: "#location", label: "الموقع" },
@@ -13,6 +14,7 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const { clinicInfo } = useClinicData();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

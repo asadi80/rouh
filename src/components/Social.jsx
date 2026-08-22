@@ -1,8 +1,9 @@
-import { socialLinks } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { socialIconMap } from "./Icons";
 import "./Social.css";
 
 export default function Social() {
+  const { socialLinks } = useClinicData();
   return (
     <section id="social" className="social">
       <div className="container social__row">

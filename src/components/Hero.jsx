@@ -1,10 +1,11 @@
 import logo from "../assets/logo.png";
-import { clinicInfo, stats } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { PhoneIcon, CalendarIcon, MapPinIcon } from "./Icons";
 import PulseDivider from "./PulseDivider";
 import "./Hero.css";
 
 export default function Hero() {
+  const { clinicInfo, stats } = useClinicData();
   return (
     <section id="home" className="hero">
       <div className="hero__glow" aria-hidden="true" />
@@ -42,9 +43,7 @@ export default function Hero() {
 
         <div className="hero__art">
           <div className="hero__art-ring">
-            <div className="hero__logo-wrapper">
-              <img src={logo} alt={clinicInfo.name} className="hero__logo" />
-            </div>
+            <img src={logo} alt={clinicInfo.name} />
           </div>
         </div>
       </div>

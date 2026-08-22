@@ -1,8 +1,9 @@
-import { clinicInfo } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { PhoneIcon, WhatsappIcon, MapPinIcon, CalendarIcon } from "./Icons";
 import "./QuickActions.css";
 
 export default function QuickActions() {
+  const { clinicInfo } = useClinicData();
   return (
     <nav className="quick-actions" aria-label="إجراءات سريعة">
       <a href={`tel:${clinicInfo.phone}`} className="quick-actions__item">

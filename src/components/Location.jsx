@@ -1,8 +1,9 @@
-import { clinicInfo } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { MapPinIcon, ExternalIcon, PhoneIcon, MailIcon } from "./Icons";
 import "./Location.css";
 
 export default function Location() {
+  const { clinicInfo } = useClinicData();
   return (
     <section id="location" className="location">
       <div className="container">

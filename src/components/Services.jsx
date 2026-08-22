@@ -1,14 +1,15 @@
-import { services } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import "./Services.css";
 
 export default function Services() {
+  const { services } = useClinicData();
   return (
     <section id="services" className="services">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">خدماتنا</span>
           <h2>ما نُقدّمه لكم</h2>
-          <p>تقدم مصحة روح للطب النفسي مجموعة متكاملة من الخدمات النفسية والعلاجية، من خلال فريق متخصص، بهدف تقديم الرعاية المناسبة لكل حالة وفق احتياجاتها.</p>
+          <p>خدمات طبية ونفسية متكاملة تحت سقف واحد.</p>
         </div>
 
         <div className="services__grid">

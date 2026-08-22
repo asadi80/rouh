@@ -1,9 +1,10 @@
 import logo from "../assets/logo.png";
-import { clinicInfo, socialLinks, workingHours } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { socialIconMap } from "./Icons";
 import "./Footer.css";
 
 export default function Footer() {
+  const { clinicInfo, socialLinks, workingHours } = useClinicData();
   const year = new Date().getFullYear();
   const todayHours = workingHours.find((w) => w.isOpen);
 
@@ -31,6 +32,7 @@ export default function Footer() {
         <div className="footer-col">
           <h4>روابط سريعة</h4>
           <a href="#home">الرئيسية</a>
+          <a href="#services">خدماتنا</a>
           <a href="#doctors">الأطباء</a>
           <a href="#hours">أوقات العمل</a>
           <a href="#location">الموقع</a>
@@ -46,12 +48,11 @@ export default function Footer() {
         </div>
 
         <div className="footer-col">
-          <h4>أوقات العمل</h4>
-          <p>{todayHours ? `${todayHours.hours}` : "—"}</p>
-          <p className="footer-note">السبت – الخميس</p>
-          <p className="footer-note"> 9:00 م – 3:00 م</p>
-          <p className="footer-note">الجمعة</p>
-        </div>
+  <h4>أوقات العمل</h4>
+  <p className="footer-note">السبت – الخميس :</p>
+  <p>{todayHours ? `${todayHours.hours}` : "—"}</p>
+  <p className="footer-note">الجمعة : 3 م - 9 م</p>
+</div>
       </div>
 
       <div className="site-footer__bottom">

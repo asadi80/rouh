@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState } from "react";
-import { doctors, clinicInfo } from "../data/clinicData";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import { WhatsappIcon, CalendarIcon, ChevronIcon } from "./Icons";
 import "./Doctors.css";
 
 export default function Doctors() {
+  const { doctors, clinicInfo } = useClinicData();
   const [query, setQuery] = useState("");
   const trackRef = useRef(null);
 
@@ -13,7 +14,7 @@ export default function Doctors() {
     return doctors.filter(
       (d) => d.name.includes(q) || d.specialty.includes(q) || d.title.includes(q)
     );
-  }, [query]);
+  }, [query, doctors]);
 
   const scrollByCards = (dir) => {
     const track = trackRef.current;
@@ -23,6 +24,45 @@ export default function Doctors() {
     // dir is +1/-1 in "reading" terms; content is RTL so we flip the sign
     track.scrollBy({ left: -dir * step, behavior: "smooth" });
   };
+  function formatArabicTime(time) {
+  if (!time) return "";
+
+  const value = String(time).trim();
+
+  const [hoursString, minutesString = "00"] =
+    value.split(":");
+
+  let hours = Number(hoursString);
+  const minutes = Number(minutesString);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return value;
+  }
+
+  const period = hours >= 12 ? "م" : "ص";
+
+  hours = hours % 12;
+
+  if (hours === 0) {
+    hours = 12;
+  }
+
+  return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
+}
+
+function formatScheduleTime(time) {
+  if (!time) return "";
+
+  /*
+   * Handles:
+   * 15:00 - 21:00
+   * 15:00–21:00
+   */
+  return String(time)
+    .split(/\s*[-–—]\s*/)
+    .map((part) => formatArabicTime(part))
+    .join(" - ");
+}
 
   return (
     <section id="doctors" className="doctors">
@@ -90,7 +130,11 @@ export default function Doctors() {
                         ) : (
                           <li key={s.day}>
                             <span>{s.day}</span>
-                            <span className="doctor-card__schedule-time">{s.time}</span>
+                            <span className="doctor-card__schedule-time">
+  {s.start_time && s.end_time
+    ? `${formatArabicTime(s.start_time)} - ${formatArabicTime(s.end_time)}`
+    : formatScheduleTime(s.time)}
+</span>
                           </li>
                         )
                       )}
