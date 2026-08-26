@@ -68,6 +68,9 @@
   padding: 11px 22px;
   font-size: 14px;
 }
+.main-nav__cta .call-text {
+  color: #fff;
+}
 
 .nav-toggle {
   display: none;
