@@ -46,7 +46,7 @@ export default function Header() {
             ))}
           </ul>
           <a href={`tel:${clinicInfo.phone}`} className="btn btn-primary main-nav__cta">
-            <PhoneIcon /> اتصل الآن
+            <PhoneIcon /> <span className="call-text">اتصل الآن</span>
           </a>
         </nav>
 

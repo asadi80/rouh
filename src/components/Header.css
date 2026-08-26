@@ -81,6 +81,14 @@
   border-radius: var(--radius-sm);
   font-size: 20px;
 }
+.main-nav__cta {
+  color: #fff;
+}
+
+.main-nav__cta svg {
+  color: #fff;
+  stroke: #fff;
+}
 
 @media (max-width: 880px) {
   .nav-toggle {
