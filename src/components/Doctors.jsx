@@ -115,15 +115,6 @@ export default function Doctors() {
                         src={doc.image}
                         alt={doc.name || "صورة الطبيب"}
                         className="doctor-card__photo"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          console.error(
-                            "Failed to load doctor image:",
-                            doc.image,
-                          );
-                          e.currentTarget.style.display = "none";
-                        }}
                       />
                     ) : (
                       <div className="doctor-card__avatar">{doc.initials}</div>

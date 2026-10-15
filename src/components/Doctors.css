@@ -145,20 +145,15 @@
 }
 
 
+
 .doctor-card__photo {
   display: block;
-  flex: 0 0 58px;
+  flex-shrink: 0;
   width: 58px;
-  min-width: 58px;
   height: 58px;
-  min-height: 58px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center;
   border: 2px solid var(--sage-300);
-  background-color: #f1f5f9;
-  overflow: hidden;
-  -webkit-appearance: none;
 }
 
 .doctor-card__top h3 {
