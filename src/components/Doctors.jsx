@@ -12,7 +12,8 @@ export default function Doctors() {
     const q = query.trim();
     if (!q) return doctors;
     return doctors.filter(
-      (d) => d.name.includes(q) || d.specialty.includes(q) || d.title.includes(q)
+      (d) =>
+        d.name.includes(q) || d.specialty.includes(q) || d.title.includes(q),
     );
   }, [query, doctors]);
 
@@ -25,44 +26,43 @@ export default function Doctors() {
     track.scrollBy({ left: -dir * step, behavior: "smooth" });
   };
   function formatArabicTime(time) {
-  if (!time) return "";
+    if (!time) return "";
 
-  const value = String(time).trim();
+    const value = String(time).trim();
 
-  const [hoursString, minutesString = "00"] =
-    value.split(":");
+    const [hoursString, minutesString = "00"] = value.split(":");
 
-  let hours = Number(hoursString);
-  const minutes = Number(minutesString);
+    let hours = Number(hoursString);
+    const minutes = Number(minutesString);
 
-  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
-    return value;
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+      return value;
+    }
+
+    const period = hours >= 12 ? "م" : "ص";
+
+    hours = hours % 12;
+
+    if (hours === 0) {
+      hours = 12;
+    }
+
+    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
   }
 
-  const period = hours >= 12 ? "م" : "ص";
+  function formatScheduleTime(time) {
+    if (!time) return "";
 
-  hours = hours % 12;
-
-  if (hours === 0) {
-    hours = 12;
+    /*
+     * Handles:
+     * 15:00 - 21:00
+     * 15:00–21:00
+     */
+    return String(time)
+      .split(/\s*[-–—]\s*/)
+      .map((part) => formatArabicTime(part))
+      .join(" - ");
   }
-
-  return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
-}
-
-function formatScheduleTime(time) {
-  if (!time) return "";
-
-  /*
-   * Handles:
-   * 15:00 - 21:00
-   * 15:00–21:00
-   */
-  return String(time)
-    .split(/\s*[-–—]\s*/)
-    .map((part) => formatArabicTime(part))
-    .join(" - ");
-}
 
   return (
     <section id="doctors" className="doctors">
@@ -72,7 +72,10 @@ function formatScheduleTime(time) {
             <CalendarIcon /> فريقنا الطبي
           </span>
           <h2>الأطباء المتاحون ومواعيدهم</h2>
-          <p>تعرّف على استشاريينا وأخصائيينا، واختر الطبيب والموعد المناسب لك مباشرة عبر واتساب.</p>
+          <p>
+            تعرّف على استشاريينا وأخصائيينا، واختر الطبيب والموعد المناسب لك
+            مباشرة عبر واتساب.
+          </p>
         </div>
 
         <div className="doctors__search">
@@ -89,7 +92,9 @@ function formatScheduleTime(time) {
         </div>
 
         {filtered.length === 0 ? (
-          <p className="doctors__empty">لا توجد نتائج مطابقة لبحثك. جرّب كلمة أخرى.</p>
+          <p className="doctors__empty">
+            لا توجد نتائج مطابقة لبحثك. جرّب كلمة أخرى.
+          </p>
         ) : (
           <div className="doctors__carousel">
             <button
@@ -106,7 +111,20 @@ function formatScheduleTime(time) {
                 <article className="doctor-card" key={doc.id}>
                   <div className="doctor-card__top">
                     {doc.image ? (
-                      <img src={doc.image} alt={doc.name} className="doctor-card__photo" />
+                      <img
+                        src={doc.image}
+                        alt={doc.name || "صورة الطبيب"}
+                        className="doctor-card__photo"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          console.error(
+                            "Failed to load doctor image:",
+                            doc.image,
+                          );
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
                     ) : (
                       <div className="doctor-card__avatar">{doc.initials}</div>
                     )}
@@ -116,11 +134,15 @@ function formatScheduleTime(time) {
                     </div>
                   </div>
 
-                  <span className="doctor-card__specialty">{doc.specialty}</span>
+                  <span className="doctor-card__specialty">
+                    {doc.specialty}
+                  </span>
                   <p className="doctor-card__bio">{doc.bio}</p>
 
                   <div className="doctor-card__schedule">
-                    <span className="doctor-card__schedule-label">مواعيد العيادة</span>
+                    <span className="doctor-card__schedule-label">
+                      مواعيد العيادة
+                    </span>
                     <ul>
                       {doc.schedule.map((s, i) =>
                         typeof s === "string" ? (
@@ -131,12 +153,12 @@ function formatScheduleTime(time) {
                           <li key={s.day}>
                             <span>{s.day}</span>
                             <span className="doctor-card__schedule-time">
-  {s.start_time && s.end_time
-    ? `${formatArabicTime(s.start_time)} - ${formatArabicTime(s.end_time)}`
-    : formatScheduleTime(s.time)}
-</span>
+                              {s.start_time && s.end_time
+                                ? `${formatArabicTime(s.start_time)} - ${formatArabicTime(s.end_time)}`
+                                : formatScheduleTime(s.time)}
+                            </span>
                           </li>
-                        )
+                        ),
                       )}
                     </ul>
                   </div>
@@ -144,7 +166,7 @@ function formatScheduleTime(time) {
                   <a
                     className="btn btn-primary doctor-card__cta"
                     href={`https://wa.me/${clinicInfo.whatsapp}?text=${encodeURIComponent(
-                      `مرحبًا، أرغب في حجز موعد مع ${doc.name}`
+                      `مرحبًا، أرغب في حجز موعد مع ${doc.name}`,
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
