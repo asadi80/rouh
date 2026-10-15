@@ -1,4 +1,3 @@
-
 import { useMemo, useRef, useState } from "react";
 import { useClinicData } from "../contexts/ClinicDataContext";
 import { WhatsappIcon, CalendarIcon, ChevronIcon } from "./Icons";
@@ -6,13 +5,16 @@ import "./Doctors.css";
 
 // Replace these example values with your actual bank information.
 const BANK_INFO = {
-  bankName: "اسم المصرف",
-  accountHolder: "اسم العيادة",
-  accountNumber: "رقم الحساب",
-  iban: "رقم IBAN",
-  consultationFee: "يحدد من العيادة",
-  currency: "LYD",
+  accountNameHolder: "شركة روح العطاء الخيرية",
+  accountHolder: "مصحة روح",
+  accountNumber: " 105907165601018",
+  accountInternationalNumber:"LY09027105105907165601018",
+  // iban: "رقم IBAN",
+  consultationFee: "100",
+  currency: "دينار ليبي",
+  bankBranch:"فرع جنزور"
 };
+const whatsappNumber = "218916669082";
 
 // Convert supported Google image URLs automatically.
 function getDoctorImageUrl(url) {
@@ -24,10 +26,7 @@ function getDoctorImageUrl(url) {
     const parsed = new URL(originalUrl);
     const hostname = parsed.hostname.toLowerCase();
 
-    if (
-      hostname === "drive.google.com" &&
-      parsed.pathname === "/thumbnail"
-    ) {
+    if (hostname === "drive.google.com" && parsed.pathname === "/thumbnail") {
       return originalUrl;
     }
 
@@ -40,13 +39,9 @@ function getDoctorImageUrl(url) {
       return originalUrl;
     }
 
-    const filePathMatch = parsed.pathname.match(
-      /\/file\/d\/([^/]+)/
-    );
+    const filePathMatch = parsed.pathname.match(/\/file\/d\/([^/]+)/);
 
-    const imagePathMatch = parsed.pathname.match(
-      /\/d\/([^/=]+)/
-    );
+    const imagePathMatch = parsed.pathname.match(/\/d\/([^/=]+)/);
 
     const fileId =
       parsed.searchParams.get("id") ||
@@ -86,7 +81,7 @@ export default function Doctors() {
       (doctor) =>
         (doctor.name || "").toLowerCase().includes(q) ||
         (doctor.specialty || "").toLowerCase().includes(q) ||
-        (doctor.title || "").toLowerCase().includes(q)
+        (doctor.title || "").toLowerCase().includes(q),
     );
   }, [query, doctors]);
 
@@ -95,9 +90,7 @@ export default function Doctors() {
     if (!track) return;
 
     const card = track.querySelector(".doctor-card");
-    const step = card
-      ? card.getBoundingClientRect().width + 20
-      : 320;
+    const step = card ? card.getBoundingClientRect().width + 20 : 320;
 
     track.scrollBy({
       left: -dir * step,
@@ -203,8 +196,7 @@ export default function Doctors() {
       return;
     }
 
-    const whatsappNumber = String(clinicInfo.whatsapp || "")
-      .replace(/\D/g, "");
+    // const whatsappNumber = String(clinicInfo.whatsapp || "").replace(/\D/g, "");
 
     if (!whatsappNumber) {
       setReceiptError("رقم واتساب العيادة غير متوفر.");
@@ -216,40 +208,35 @@ export default function Doctors() {
       `الطبيب: ${selectedDoctor.name || ""}`,
       `التخصص: ${selectedDoctor.specialty || ""}`,
       `رسوم الكشف: ${BANK_INFO.consultationFee} ${BANK_INFO.currency}`,
-      "أرفقت إيصال التحويل لتأكيد الحجز.",
+      "مرفق إيصال التحويل المصرفي.",
     ].join("\n");
 
-    const whatsappUrl =
-      `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-    // Share the image through the device share sheet when supported.
-    if (
-      navigator.share &&
-      navigator.canShare
-    ) {
+    // Share the receipt image when the browser supports it.
+    if (navigator.share && navigator.canShare) {
       try {
-        if (navigator.canShare({ files: [receiptFile] })) {
-          await navigator.share({
-            title: "إيصال دفع حجز العيادة",
-            text: message,
-            files: [receiptFile],
-          });
+        const shareData = {
+          title: "إيصال دفع حجز العيادة",
+          text: message,
+          files: [receiptFile],
+        };
 
+        if (navigator.canShare({ files: [receiptFile] })) {
+          await navigator.share(shareData);
           return;
         }
       } catch (error) {
         if (error.name === "AbortError") return;
-
         console.error("Receipt sharing failed:", error);
       }
     }
 
-    // Fallback: open WhatsApp with the booking message.
-    // The customer must attach the image manually.
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    // Fallback: open the WhatsApp conversation directly.
+    window.location.href = whatsappUrl;
 
     setReceiptError(
-      "تم فتح واتساب بالرسالة. أرفق صورة الإيصال داخل المحادثة ثم أرسلها."
+      "إذا لم تظهر صورة الإيصال تلقائيًا، أرفقها يدويًا في محادثة واتساب.",
     );
   }
 
@@ -279,8 +266,7 @@ export default function Doctors() {
           />
 
           <span className="doctors__count">
-            {filtered.length}{" "}
-            {filtered.length === 1 ? "طبيب" : "أطباء"}
+            {filtered.length} {filtered.length === 1 ? "طبيب" : "أطباء"}
           </span>
         </div>
 
@@ -315,8 +301,9 @@ export default function Doctors() {
                             event.currentTarget.style.display = "none";
 
                             const avatar =
-                              event.currentTarget.parentElement
-                                ?.querySelector(".doctor-card__avatar");
+                              event.currentTarget.parentElement?.querySelector(
+                                ".doctor-card__avatar",
+                              );
 
                             if (avatar) avatar.style.display = "flex";
                           }}
@@ -365,14 +352,12 @@ export default function Doctors() {
                               <span className="doctor-card__schedule-time">
                                 {schedule.start_time && schedule.end_time
                                   ? `${formatArabicTime(
-                                      schedule.start_time
-                                    )} - ${formatArabicTime(
-                                      schedule.end_time
-                                    )}`
+                                      schedule.start_time,
+                                    )} - ${formatArabicTime(schedule.end_time)}`
                                   : formatScheduleTime(schedule.time)}
                               </span>
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </div>
@@ -436,8 +421,8 @@ export default function Doctors() {
               <h3>بيانات التحويل المصرفي</h3>
 
               <div className="payment-modal__row">
-                <span>المصرف</span>
-                <strong>{BANK_INFO.bankName}</strong>
+                <span>اسم صاحب الحساب</span>
+                <strong>{BANK_INFO.accountNameHolder}</strong>
               </div>
 
               <div className="payment-modal__row">
@@ -451,9 +436,19 @@ export default function Doctors() {
               </div>
 
               <div className="payment-modal__row">
+                <span>رقم الحساب الدولي</span>
+                <strong>{BANK_INFO.accountInternationalNumber}</strong>
+              </div>
+
+              <div className="payment-modal__row">
+                <span>الفرع</span>
+                <strong>{BANK_INFO.bankBranch}</strong>
+              </div>
+
+              {/* <div className="payment-modal__row">
                 <span>IBAN</span>
                 <strong>{BANK_INFO.iban}</strong>
-              </div>
+              </div> */}
 
               <div className="payment-modal__fee">
                 <span>رسوم الكشف</span>
@@ -480,10 +475,7 @@ export default function Doctors() {
 
             {receiptPreview && (
               <div className="payment-modal__preview">
-                <img
-                  src={receiptPreview}
-                  alt="معاينة إيصال الدفع"
-                />
+                <img src={receiptPreview} alt="معاينة إيصال الدفع" />
 
                 <p>{receiptFile?.name}</p>
 
@@ -522,8 +514,8 @@ export default function Doctors() {
             </button>
 
             <p className="payment-modal__note">
-              تأكد من إرسال صورة الإيصال في محادثة واتساب.
-              لا يعتبر الحجز مؤكداً إلا بعد مراجعة الدفع وتأكيد العيادة.
+              تأكد من إرسال صورة الإيصال في محادثة واتساب. لا يعتبر الحجز مؤكداً
+              إلا بعد مراجعة الدفع وتأكيد العيادة.
             </p>
           </div>
         </div>
