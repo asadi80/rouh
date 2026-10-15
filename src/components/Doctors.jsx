@@ -197,6 +197,7 @@ export default function Doctors() {
     }
 
     // const whatsappNumber = String(clinicInfo.whatsapp || "").replace(/\D/g, "");
+    const whatsappNumber = "218916669082";
 
     if (!whatsappNumber) {
       setReceiptError("رقم واتساب العيادة غير متوفر.");
