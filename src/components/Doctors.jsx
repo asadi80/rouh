@@ -8,11 +8,11 @@ const BANK_INFO = {
   accountNameHolder: "شركة روح العطاء الخيرية",
   accountHolder: "مصحة روح",
   accountNumber: " 105907165601018",
-  accountInternationalNumber:"LY09027105105907165601018",
+  accountInternationalNumber: "LY09027105105907165601018",
   // iban: "رقم IBAN",
   consultationFee: "100",
   currency: "دينار ليبي",
-  bankBranch:"فرع جنزور"
+  bankBranch: "فرع جنزور",
 };
 const whatsappNumber = "218916669082";
 
@@ -58,6 +58,33 @@ function getDoctorImageUrl(url) {
   } catch {
     return originalUrl;
   }
+}
+
+// Clipboard only reliably accepts PNG, so convert any image to PNG first.
+function fileToPngBlob(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext("2d").drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("toBlob failed"))),
+        "image/png",
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Image load failed"));
+    };
+
+    img.src = url;
+  });
 }
 
 export default function Doctors() {
@@ -196,49 +223,27 @@ export default function Doctors() {
       return;
     }
 
-    // const whatsappNumber = String(clinicInfo.whatsapp || "").replace(/\D/g, "");
-    const whatsappNumber = "218916669082";
-
-    if (!whatsappNumber) {
-      setReceiptError("رقم واتساب العيادة غير متوفر.");
-      return;
-    }
-
     const message = [
       "مرحبًا، أرغب في حجز موعد.",
       `الطبيب: ${selectedDoctor.name || ""}`,
       `التخصص: ${selectedDoctor.specialty || ""}`,
-      `رسوم الكشف: ${BANK_INFO.consultationFee} ${BANK_INFO.currency}`,
-      "مرفق إيصال التحويل المصرفي.",
     ].join("\n");
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-    // Share the receipt image when the browser supports it.
-    if (navigator.share && navigator.canShare) {
-      try {
-        const shareData = {
-          title: "إيصال دفع حجز العيادة",
-          text: message,
-          files: [receiptFile],
-        };
-
-        if (navigator.canShare({ files: [receiptFile] })) {
-          await navigator.share(shareData);
-          return;
-        }
-      } catch (error) {
-        if (error.name === "AbortError") return;
-        console.error("Receipt sharing failed:", error);
+    // Copy the receipt image to the clipboard (passing a promise keeps
+    // the user-gesture valid, which Safari requires).
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": fileToPngBlob(receiptFile) }),
+        ]);
       }
+    } catch (error) {
+      console.error("Copying receipt failed:", error);
     }
 
-    // Fallback: open the WhatsApp conversation directly.
     window.location.href = whatsappUrl;
-
-    setReceiptError(
-      "إذا لم تظهر صورة الإيصال تلقائيًا، أرفقها يدويًا في محادثة واتساب.",
-    );
   }
 
   return (
@@ -515,8 +520,9 @@ export default function Doctors() {
             </button>
 
             <p className="payment-modal__note">
-              تأكد من إرسال صورة الإيصال في محادثة واتساب. لا يعتبر الحجز مؤكداً
-              إلا بعد مراجعة الدفع وتأكيد العيادة.
+              عند الضغط على الزر سيتم نسخ صورة الإيصال وفتح محادثة واتساب. اضغط
+              مطولاً على خانة الكتابة ثم اختر "لصق" لإرسال الإيصال. لا يعتبر
+              الحجز مؤكداً إلا بعد مراجعة الدفع وتأكيد العيادة.
             </p>
           </div>
         </div>
