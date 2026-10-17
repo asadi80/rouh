@@ -217,34 +217,51 @@ export default function Doctors() {
     reader.readAsDataURL(file);
   }
 
-  async function sendBookingToWhatsApp() {
-    if (!selectedDoctor || !receiptFile) {
-      setReceiptError("يرجى اختيار صورة إيصال الدفع أولاً.");
-      return;
-    }
+  // async function sendBookingToWhatsApp() {
+  //   if (!selectedDoctor || !receiptFile) {
+  //     setReceiptError("يرجى اختيار صورة إيصال الدفع أولاً.");
+  //     return;
+  //   }
 
-    const message = [
-      "مرحبًا، أرغب في حجز موعد.",
-      `الطبيب: ${selectedDoctor.name || ""}`,
-      `التخصص: ${selectedDoctor.specialty || ""}`,
-    ].join("\n");
+  //   const message = [
+  //     "مرحبًا، أرغب في حجز موعد.",
+  //     `الطبيب: ${selectedDoctor.name || ""}`,
+  //     `التخصص: ${selectedDoctor.specialty || ""}`,
+  //   ].join("\n");
 
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  //   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-    // Copy the receipt image to the clipboard (passing a promise keeps
-    // the user-gesture valid, which Safari requires).
-    try {
-      if (navigator.clipboard && window.ClipboardItem) {
-        await navigator.clipboard.write([
-          new ClipboardItem({ "image/png": fileToPngBlob(receiptFile) }),
-        ]);
-      }
-    } catch (error) {
-      console.error("Copying receipt failed:", error);
-    }
+  //   // Copy the receipt image to the clipboard (passing a promise keeps
+  //   // the user-gesture valid, which Safari requires).
+  //   try {
+  //     if (navigator.clipboard && window.ClipboardItem) {
+  //       await navigator.clipboard.write([
+  //         new ClipboardItem({ "image/png": fileToPngBlob(receiptFile) }),
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Copying receipt failed:", error);
+  //   }
 
-    window.location.href = whatsappUrl;
-  }
+  //   window.location.href = whatsappUrl;
+  // }
+
+  function sendBookingToWhatsApp() {
+  if (!selectedDoctor) return;
+
+  const message = [
+    "مرحبًا، أرغب في حجز موعد.",
+    `الطبيب: ${selectedDoctor.name || ""}`,
+    `التخصص: ${selectedDoctor.specialty || ""}`,
+    "رسوم الكشف: 150 دينار ليبي",
+    "سأرسل إيصال الدفع في المحادثة إذا لزم الأمر.",
+  ].join("\n");
+
+  const whatsappUrl =
+    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  window.location.href = whatsappUrl;
+}
 
   return (
     <section id="doctors" className="doctors">
@@ -479,7 +496,7 @@ export default function Doctors() {
               </span> */}
             </label>
 
-            {receiptPreview && (
+            {/* {receiptPreview && (
               <div className="payment-modal__preview">
                 <img src={receiptPreview} alt="معاينة إيصال الدفع" />
 
@@ -501,7 +518,7 @@ export default function Doctors() {
                   إزالة الصورة
                 </button>
               </div>
-            )}
+            )} */}
 
             {receiptError && (
               <p className="payment-modal__error" role="status">
@@ -512,7 +529,7 @@ export default function Doctors() {
             <button
               type="button"
               className="btn btn-primary payment-modal__whatsapp"
-              disabled={!receiptFile}
+              // disabled={!receiptFile}
               onClick={sendBookingToWhatsApp}
             >
               <WhatsappIcon />
