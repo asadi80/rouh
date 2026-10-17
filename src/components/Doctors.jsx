@@ -10,7 +10,7 @@ const BANK_INFO = {
   accountNumber: " 105907165601018",
   accountInternationalNumber: "LY09027105105907165601018",
   // iban: "رقم IBAN",
-  consultationFee: "100",
+  consultationFee: "150",
   currency: "دينار ليبي",
   bankBranch: "فرع جنزور",
 };
