@@ -40,12 +40,12 @@ function mapSettingsToSocialLinks(row) {
 
 async function fetchJson(path) {
   const url = `${API_URL}${path}`;
-  console.log(`📡 Fetching: ${url}`);
+  // console.log(`📡 Fetching: ${url}`);
 
   const res = await fetch(url);
   const text = await res.text();
 
-  console.log(`📥 Response status for ${path}:`, res.status);
+  // console.log(`📥 Response status for ${path}:`, res.status);
 
   if (!res.ok) {
     throw new Error(`فشل تحميل ${path} (${res.status}): ${text || "Empty response"}`);
@@ -57,7 +57,7 @@ async function fetchJson(path) {
 
   try {
     const parsed = JSON.parse(text);
-    console.log(`✅ Successfully parsed JSON for ${path}:`, parsed);
+    // console.log(`✅ Successfully parsed JSON for ${path}:`, parsed);
     return parsed;
   } catch (err) {
     console.error(`❌ Invalid JSON from ${url}:`, text);
@@ -66,8 +66,8 @@ async function fetchJson(path) {
 }
 
 async function fetchFromApi() {
-  console.log("🚀 Starting to fetch all API data...");
-  console.log(`🔗 API_URL: ${API_URL}`);
+  // console.log("🚀 Starting to fetch all API data...");
+  // console.log(`🔗 API_URL: ${API_URL}`);
 
   // Fetch all routes - if any fails, throw error
   const [settings, hours, doctors, services, whyUs] = await Promise.all([
@@ -78,12 +78,12 @@ async function fetchFromApi() {
     fetchJson("/api/why-us"),
   ]);
 
-  console.log("📊 Raw API Data Summary:");
-  console.log("  • Settings:", settings);
-  console.log("  • Working Hours:", hours);
-  console.log("  • Doctors:", doctors);
-  console.log("  • Services:", services);
-  console.log("  • Why Us:", whyUs);
+  // console.log("📊 Raw API Data Summary:");
+  // console.log("  • Settings:", settings);
+  // console.log("  • Working Hours:", hours);
+  // console.log("  • Doctors:", doctors);
+  // console.log("  • Services:", services);
+  // console.log("  • Why Us:", whyUs);
 
   // Process the data
   const clinicInfo = mapSettingsToClinicInfo(settings);
@@ -123,14 +123,14 @@ async function fetchFromApi() {
     stats: [], // يمكن إضافة إحصائيات من الـ API لاحقاً
   };
 
-  console.log("✅ Final processed data:", result);
-  console.log("📊 Data counts:");
-  console.log("  • Clinic Info:", Object.keys(clinicInfo).length, "fields");
-  console.log("  • Social Links:", socialLinks.length, "items");
-  console.log("  • Working Hours:", workingHours.length, "items");
-  console.log("  • Doctors:", doctors.length, "items");
-  console.log("  • Services:", processedServices.length, "items");
-  console.log("  • Why Us:", processedWhyUs.length, "items");
+  // console.log("✅ Final processed data:", result);
+  // console.log("📊 Data counts:");
+  // console.log("  • Clinic Info:", Object.keys(clinicInfo).length, "fields");
+  // console.log("  • Social Links:", socialLinks.length, "items");
+  // console.log("  • Working Hours:", workingHours.length, "items");
+  // console.log("  • Doctors:", doctors.length, "items");
+  // console.log("  • Services:", processedServices.length, "items");
+  // console.log("  • Why Us:", processedWhyUs.length, "items");
 
   return result;
 }
@@ -159,7 +159,7 @@ export function ClinicDataProvider({ children }) {
       try {
         const fresh = await fetchFromApi();
         if (!cancelled) {
-          console.log("✅ Setting data in state:", fresh);
+          // console.log("✅ Setting data in state:", fresh);
           setData(fresh);
           setError(null);
           setLoading(false);
@@ -178,7 +178,7 @@ export function ClinicDataProvider({ children }) {
 
     load();
     return () => {
-      console.log("🧹 Cleaning up ClinicDataProvider");
+      // console.log("🧹 Cleaning up ClinicDataProvider");
       cancelled = true;
     };
   }, []);
@@ -188,17 +188,17 @@ export function ClinicDataProvider({ children }) {
     loading, 
     error,
     debug: () => {
-      console.log("🔍 Current Context Data:");
-      console.log("  • loading:", loading);
-      console.log("  • error:", error);
-      console.log("  • data:", data);
-      console.log("  • clinicInfo:", data?.clinicInfo);
-      console.log("  • socialLinks:", data?.socialLinks);
-      console.log("  • workingHours:", data?.workingHours);
-      console.log("  • doctors:", data?.doctors);
-      console.log("  • services:", data?.services);
-      console.log("  • whyUs:", data?.whyUs);
-      console.log("  • stats:", data?.stats);
+      // console.log("🔍 Current Context Data:");
+      // console.log("  • loading:", loading);
+      // console.log("  • error:", error);
+      // console.log("  • data:", data);
+      // console.log("  • clinicInfo:", data?.clinicInfo);
+      // console.log("  • socialLinks:", data?.socialLinks);
+      // console.log("  • workingHours:", data?.workingHours);
+      // console.log("  • doctors:", data?.doctors);
+      // console.log("  • services:", data?.services);
+      // console.log("  • whyUs:", data?.whyUs);
+      // console.log("  • stats:", data?.stats);
       return { loading, error, data };
     }
   };
