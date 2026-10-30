@@ -1,16 +1,39 @@
+
+/* =========================================
+   DOCTORS SECTION
+========================================= */
+
 .doctors {
   padding: 80px 0;
 }
 
+/* =========================================
+   DOCTORS FILTERS
+========================================= */
+
+.doctors__filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  direction: rtl;
+}
+
+/* Search */
+
 .doctors__search {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  flex: 1;
   max-width: 480px;
-  margin: 0 auto 36px;
+  margin: 0;
 }
 
 .doctors__search input {
+  min-width: 0;
   flex: 1;
   padding: 13px 20px;
   border-radius: var(--radius-pill);
@@ -20,7 +43,7 @@
   font-size: 14.5px;
   color: var(--ink);
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .doctors__search input::placeholder {
@@ -31,8 +54,6 @@
   border-color: var(--teal-500);
   box-shadow: 0 0 0 3px rgba(44, 148, 148, 0.12);
 }
-
-
 
 .doctors__count {
   flex-shrink: 0;
@@ -45,12 +66,71 @@
   white-space: nowrap;
 }
 
+/* Gender filter */
+
+.doctors__gender-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px;
+  background: var(--sage-100);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.doctors__gender-filter button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 9px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+
+.doctors__gender-filter button:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--teal-700);
+}
+
+.doctors__gender-filter button.active {
+  background: var(--teal-700);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.doctors__gender-filter button:focus-visible {
+  outline: 3px solid rgba(44, 148, 148, 0.3);
+  outline-offset: 3px;
+}
+
+/* Empty results */
+
 .doctors__empty {
   text-align: center;
   color: var(--ink-faint);
   font-size: 15px;
   padding: 40px 0;
 }
+
+/* =========================================
+   DOCTORS CAROUSEL
+========================================= */
 
 .doctors__carousel {
   position: relative;
@@ -67,6 +147,8 @@
   padding: 6px 2px 18px;
   scrollbar-width: thin;
   scrollbar-color: var(--sage-300) transparent;
+  flex: 1;
+  min-width: 0;
 }
 
 .doctors__track::-webkit-scrollbar {
@@ -92,6 +174,13 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Carousel arrows */
+
 .doctors__arrow {
   flex-shrink: 0;
   width: 44px;
@@ -105,7 +194,11 @@
   justify-content: center;
   font-size: 20px;
   box-shadow: var(--shadow-sm);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+  cursor: pointer;
 }
 
 .doctors__arrow:hover {
@@ -114,16 +207,9 @@
   border-color: var(--teal-700);
 }
 
-@media (max-width: 720px) {
-  .doctors__arrow {
-    display: none;
-  }
-}
-
-.doctor-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
+/* =========================================
+   DOCTOR CARD
+========================================= */
 
 .doctor-card__top {
   display: flex;
@@ -136,7 +222,11 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(150deg, var(--sage-500), var(--teal-600));
+  background: linear-gradient(
+    150deg,
+    var(--sage-500),
+    var(--teal-600)
+  );
   color: var(--white);
   font-family: var(--font-display);
   font-weight: 700;
@@ -145,8 +235,6 @@
   align-items: center;
   justify-content: center;
 }
-
-
 
 .doctor-card__photo {
   display: block;
@@ -185,6 +273,10 @@
   color: var(--ink-soft);
 }
 
+/* =========================================
+   DOCTOR SCHEDULE
+========================================= */
+
 .doctor-card__schedule {
   border-top: 1px dashed var(--line);
   padding-top: 14px;
@@ -208,6 +300,7 @@
 .doctor-card__schedule li {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   font-size: 13.5px;
   color: var(--ink);
 }
@@ -216,6 +309,7 @@
   color: var(--sage-600);
   font-weight: 600;
   direction: ltr;
+  white-space: nowrap;
 }
 
 .doctor-card__schedule-note {
@@ -227,6 +321,10 @@
   padding: 6px 12px;
 }
 
+/* =========================================
+   DOCTOR BOOKING BUTTON
+========================================= */
+
 .doctor-card__cta {
   margin-top: auto;
   width: 100%;
@@ -234,8 +332,10 @@
   font-size: 14px;
 }
 
+/* =========================================
+   PAYMENT MODAL OVERLAY
+========================================= */
 
-/* Payment modal overlay */
 .payment-modal__overlay {
   position: fixed;
   inset: 0;
@@ -289,6 +389,8 @@
   color: var(--ink-soft);
 }
 
+/* Bank details */
+
 .payment-modal__bank {
   padding: 18px;
   background: var(--sage-100);
@@ -334,6 +436,8 @@
   color: var(--teal-700);
 }
 
+/* Receipt upload */
+
 .payment-modal__upload {
   display: flex;
   flex-direction: column;
@@ -358,6 +462,8 @@
   font-weight: 400;
   line-height: 1.7;
 }
+
+/* Receipt preview */
 
 .payment-modal__preview {
   margin-bottom: 20px;
@@ -389,6 +495,8 @@
   cursor: pointer;
 }
 
+/* WhatsApp button */
+
 .payment-modal__whatsapp {
   display: flex;
   align-items: center;
@@ -404,6 +512,8 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Errors and notes */
 
 .payment-modal__error {
   margin: 12px 0;
@@ -423,7 +533,83 @@
   line-height: 1.9;
 }
 
+/* =========================================
+   TABLET RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .doctors__filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .doctors__search {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .doctors__gender-filter {
+    width: fit-content;
+    max-width: 100%;
+    align-self: center;
+  }
+
+  .doctors__gender-filter button {
+    padding: 9px 15px;
+    font-size: 13px;
+  }
+
+  .doctors__arrow {
+    display: none;
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
 @media (max-width: 480px) {
+  .doctors {
+    padding: 55px 0;
+  }
+
+  .doctors__filters {
+    gap: 15px;
+  }
+
+  .doctors__search {
+    gap: 8px;
+  }
+
+  .doctors__search input {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .doctors__count {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .doctors__gender-filter {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .doctors__gender-filter button {
+    flex: 1;
+    padding: 9px 7px;
+    font-size: 12px;
+    min-height: 38px;
+  }
+
+  .doctor-card {
+    flex-basis: 85%;
+    padding: 20px;
+  }
+
   .payment-modal {
     padding: 24px 16px;
   }
@@ -437,4 +623,3 @@
     font-size: 12px;
   }
 }
-
