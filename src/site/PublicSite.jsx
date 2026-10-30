@@ -1,4 +1,6 @@
 //src/site/PuplicSite
+import { useState } from "react";
+
 import {
   ClinicDataProvider,
   useClinicData,
@@ -18,6 +20,7 @@ import PulseDivider from "../components/PulseDivider";
 import MentalHealthTest from "../components/MentalHealthTest";
 
 function SiteContent() {
+  const [showMentalHealthTest, setShowMentalHealthTest] = useState(false);
   const { loading } = useClinicData();
 
   if (loading) {
@@ -49,7 +52,39 @@ function SiteContent() {
         <div className="container">
           <PulseDivider flat />
         </div>
-        <MentalHealthTest />
+        <section className="mental-health-section">
+          <div className="container">
+            {!showMentalHealthTest ? (
+              <div className="mental-health-intro">
+                <h2>اطمئن على صحتك النفسية</h2>
+                <p>
+                  أجب عن مجموعة من الأسئلة القصيرة للحصول على تقييم أولي لمستوى
+                  الصحة النفسية.
+                </p>
+
+                <button
+                  type="button"
+                  className="mental-health-start-btn"
+                  onClick={() => setShowMentalHealthTest(true)}
+                >
+                  ابدأ الاختبار
+                </button>
+              </div>
+            ) : (
+              <div className="mental-health-test-wrapper">
+                <button
+                  type="button"
+                  className="mental-health-close-btn"
+                  onClick={() => setShowMentalHealthTest(false)}
+                >
+                  إغلاق الاختبار ✕
+                </button>
+
+                <MentalHealthTest />
+              </div>
+            )}
+          </div>
+        </section>
         <WorkingHours />
         <Location />
         <Social />
