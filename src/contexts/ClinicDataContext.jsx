@@ -195,7 +195,7 @@ export function ClinicDataProvider({ children }) {
       // console.log("  • clinicInfo:", data?.clinicInfo);
       // console.log("  • socialLinks:", data?.socialLinks);
       // console.log("  • workingHours:", data?.workingHours);
-      // console.log("  • doctors:", data?.doctors);
+      console.log("  • doctors:", data?.doctors);
       // console.log("  • services:", data?.services);
       // console.log("  • whyUs:", data?.whyUs);
       // console.log("  • stats:", data?.stats);
