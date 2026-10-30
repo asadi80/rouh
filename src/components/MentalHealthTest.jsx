@@ -189,7 +189,8 @@ export default function MentalHealthTest() {
       <div className="mht-container">
         <header className="mht-header">
           <span className="mht-header__label">التقييم النفسي</span>
-          <h1>مقاييس الصحة النفسية</h1>
+          <h1>البطارية الإكلينيكية المختصرة</h1>
+          <h3>منظومة فحص سريعة للشخصية، الاكتئاب، القلق، ونوبات الهلع مع مفتاح التصحيح الآلي</h3>
           <p>
             يرجى الإجابة عن الأسئلة التالية بدقة، وفقاً لما شعرت به خلال
             الفترات الزمنية الموضحة في كل قسم.
