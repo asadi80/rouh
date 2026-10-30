@@ -91,6 +91,7 @@ export default function Doctors() {
   const { doctors = [], clinicInfo = {} } = useClinicData();
 
   const [query, setQuery] = useState("");
+  const [genderFilter, setGenderFilter] = useState("all");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState("");
@@ -102,15 +103,21 @@ export default function Doctors() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
 
-    if (!q) return doctors;
+    return doctors.filter((doctor) => {
+      // Gender filter
+      const matchesGender =
+        genderFilter === "all" || doctor.gender?.toLowerCase() === genderFilter;
 
-    return doctors.filter(
-      (doctor) =>
+      // Search filter
+      const matchesSearch =
+        !q ||
         (doctor.name || "").toLowerCase().includes(q) ||
         (doctor.specialty || "").toLowerCase().includes(q) ||
-        (doctor.title || "").toLowerCase().includes(q),
-    );
-  }, [query, doctors]);
+        (doctor.title || "").toLowerCase().includes(q);
+
+      return matchesGender && matchesSearch;
+    });
+  }, [query, genderFilter, doctors]);
 
   const scrollByCards = (dir) => {
     const track = trackRef.current;
@@ -247,21 +254,20 @@ export default function Doctors() {
   // }
 
   function sendBookingToWhatsApp() {
-  if (!selectedDoctor) return;
+    if (!selectedDoctor) return;
 
-  const message = [
-    "مرحبًا، أرغب في حجز موعد.",
-    `الطبيب: ${selectedDoctor.name || ""}`,
-    `التخصص: ${selectedDoctor.specialty || ""}`,
-    "رسوم الكشف: 150 دينار ليبي",
-    "سأرسل إيصال الدفع في المحادثة إذا لزم الأمر.",
-  ].join("\n");
+    const message = [
+      "مرحبًا، أرغب في حجز موعد.",
+      `الطبيب: ${selectedDoctor.name || ""}`,
+      `التخصص: ${selectedDoctor.specialty || ""}`,
+      "رسوم الكشف: 150 دينار ليبي",
+      "سأرسل إيصال الدفع في المحادثة إذا لزم الأمر.",
+    ].join("\n");
 
-  const whatsappUrl =
-    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-  window.location.href = whatsappUrl;
-}
+    window.location.href = whatsappUrl;
+  }
 
   return (
     <section id="doctors" className="doctors">
@@ -278,19 +284,46 @@ export default function Doctors() {
             مباشرة عبر واتساب.
           </p>
         </div>
+        <div className="doctors__filters">
+          <div className="doctors__search">
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="ابحث بالاسم أو التخصص..."
+              aria-label="البحث عن طبيب"
+            />
 
-        <div className="doctors__search">
-          <input
-            type="text"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="ابحث بالاسم أو التخصص..."
-            aria-label="البحث عن طبيب"
-          />
+            <span className="doctors__count">
+              {filtered.length} {filtered.length === 1 ? "طبيب" : "أطباء"}
+            </span>
+          </div>
 
-          <span className="doctors__count">
-            {filtered.length} {filtered.length === 1 ? "طبيب" : "أطباء"}
-          </span>
+          <div className="doctors__gender-filter" dir="rtl">
+            <button
+              type="button"
+              className={genderFilter === "all" ? "active" : ""}
+              onClick={() => setGenderFilter("all")}
+            >
+              جميع الأطباء
+            </button>
+
+            <button
+              type="button"
+              className={genderFilter === "male" ? "active" : ""}
+              onClick={() => setGenderFilter("male")}
+            >
+              ♂ أطباء
+            </button>
+
+            <button
+              type="button"
+              className={genderFilter === "female" ? "active" : ""}
+              onClick={() => setGenderFilter("female")}
+            >
+              ♀ طبيبات
+            </button>
+          </div>
         </div>
 
         {filtered.length === 0 ? (
