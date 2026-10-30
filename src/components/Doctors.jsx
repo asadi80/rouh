@@ -96,9 +96,19 @@ export default function Doctors() {
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState("");
   const [receiptError, setReceiptError] = useState("");
+  const [specialtyFilter, setSpecialtyFilter] = useState("all");
 
   const trackRef = useRef(null);
   const receiptInputRef = useRef(null);
+
+  // Get unique specialties from active doctors
+  const specialties = useMemo(() => {
+    return [
+      ...new Set(
+        doctors.map((doctor) => doctor.specialty?.trim()).filter(Boolean),
+      ),
+    ].sort((a, b) => a.localeCompare(b, "ar"));
+  }, [doctors]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -108,6 +118,11 @@ export default function Doctors() {
       const matchesGender =
         genderFilter === "all" || doctor.gender?.toLowerCase() === genderFilter;
 
+      // Specialty filter
+      const matchesSpecialty =
+        specialtyFilter === "all" ||
+        doctor.specialty?.trim() === specialtyFilter;
+
       // Search filter
       const matchesSearch =
         !q ||
@@ -115,9 +130,9 @@ export default function Doctors() {
         (doctor.specialty || "").toLowerCase().includes(q) ||
         (doctor.title || "").toLowerCase().includes(q);
 
-      return matchesGender && matchesSearch;
+      return matchesGender && matchesSpecialty && matchesSearch;
     });
-  }, [query, genderFilter, doctors]);
+  }, [query, genderFilter, specialtyFilter, doctors]);
 
   const scrollByCards = (dir) => {
     const track = trackRef.current;
@@ -294,11 +309,28 @@ export default function Doctors() {
               aria-label="البحث عن طبيب"
             />
 
-            <span className="doctors__count">
-              {filtered.length} {filtered.length === 1 ? "طبيب" : "أطباء"}
-            </span>
+            <span className="doctors__count">{filtered.length} طبيب</span>
           </div>
 
+          {/* Specialty filter */}
+          <div className="doctors__specialty-filter">
+            <select
+              value={specialtyFilter}
+              onChange={(event) => setSpecialtyFilter(event.target.value)}
+              aria-label="تصفية حسب التخصص"
+              dir="rtl"
+            >
+              <option value="all">جميع التخصصات</option>
+
+              {specialties.map((specialty) => (
+                <option key={specialty} value={specialty}>
+                  {specialty}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Gender filter */}
           <div className="doctors__gender-filter" dir="rtl">
             <button
               type="button"
