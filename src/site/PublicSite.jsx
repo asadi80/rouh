@@ -1,5 +1,8 @@
 //src/site/PuplicSite
-import { ClinicDataProvider, useClinicData } from "../contexts/ClinicDataContext";
+import {
+  ClinicDataProvider,
+  useClinicData,
+} from "../contexts/ClinicDataContext";
 import AnnouncementBar from "../components/AnnouncementBar";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
@@ -12,6 +15,7 @@ import Social from "../components/Social";
 import Footer from "../components/Footer";
 import QuickActions from "../components/QuickActions";
 import PulseDivider from "../components/PulseDivider";
+import MentalHealthTest from "../components/MentalHealthTest";
 
 function SiteContent() {
   const { loading } = useClinicData();
@@ -45,6 +49,7 @@ function SiteContent() {
         <div className="container">
           <PulseDivider flat />
         </div>
+        <MentalHealthTest />
         <WorkingHours />
         <Location />
         <Social />
