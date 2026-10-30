@@ -81,7 +81,7 @@ async function fetchFromApi() {
   // console.log("📊 Raw API Data Summary:");
   // console.log("  • Settings:", settings);
   // console.log("  • Working Hours:", hours);
-  // console.log("  • Doctors:", doctors);
+  console.log("  • Doctors:", doctors);
   // console.log("  • Services:", services);
   // console.log("  • Why Us:", whyUs);
 
@@ -128,7 +128,7 @@ async function fetchFromApi() {
   // console.log("  • Clinic Info:", Object.keys(clinicInfo).length, "fields");
   // console.log("  • Social Links:", socialLinks.length, "items");
   // console.log("  • Working Hours:", workingHours.length, "items");
-  // console.log("  • Doctors:", doctors.length, "items");
+  console.log("  • Doctors:", doctors.length, "items");
   // console.log("  • Services:", processedServices.length, "items");
   // console.log("  • Why Us:", processedWhyUs.length, "items");
 
