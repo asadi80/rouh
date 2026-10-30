@@ -11,6 +11,8 @@ const navLinks = [
   { href: "#hours", label: "أوقات العمل" },
   { href: "#location", label: "الموقع" },
   { href: "#contact", label: "تواصل معنا" },
+  { href: "#mentallTest", label: "التقييم النفسي" },
+
 ];
 
 export default function Header() {

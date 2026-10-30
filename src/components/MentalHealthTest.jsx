@@ -1,13 +1,7 @@
-
 import { useMemo, useState } from "react";
 import "./MentalHealthTest.css";
 
-const choices = [
-  "أبداً",
-  "لأيام قليلة",
-  "لأكثر من نصف الأيام",
-  "شبه يومياً",
-];
+const choices = ["أبداً", "لأيام قليلة", "لأكثر من نصف الأيام", "شبه يومياً"];
 
 const phqQuestions = [
   "قلة الاهتمام أو المتعة في القيام بالأشياء.",
@@ -56,13 +50,7 @@ const getAnxietyLevel = (score) => {
   return "قلق شديد";
 };
 
-function QuestionGroup({
-  title,
-  instruction,
-  questions,
-  answers,
-  onChange,
-}) {
+function QuestionGroup({ title, instruction, questions, answers, onChange }) {
   return (
     <section className="mht-section">
       <div className="mht-section__heading">
@@ -114,16 +102,15 @@ export default function MentalHealthTest() {
 
   const phqScore = useMemo(
     () => Object.values(phqAnswers).reduce((sum, value) => sum + value, 0),
-    [phqAnswers]
+    [phqAnswers],
   );
 
   const gadScore = useMemo(
     () => Object.values(gadAnswers).reduce((sum, value) => sum + value, 0),
-    [gadAnswers]
+    [gadAnswers],
   );
 
-  const panicPositive =
-    panicAnswer === "yes" && panicSymptoms.length >= 4;
+  const panicPositive = panicAnswer === "yes" && panicSymptoms.length >= 4;
 
   const phqComplete = Object.keys(phqAnswers).length === 9;
   const gadComplete = Object.keys(gadAnswers).length === 7;
@@ -146,7 +133,7 @@ export default function MentalHealthTest() {
     setPanicSymptoms((previous) =>
       previous.includes(index)
         ? previous.filter((item) => item !== index)
-        : [...previous, index]
+        : [...previous, index],
     );
     setSubmitted(false);
   };
@@ -185,227 +172,223 @@ export default function MentalHealthTest() {
   };
 
   return (
-    <main className="mht" dir="rtl">
-      <div className="mht-container">
-        <header className="mht-header">
-          <span className="mht-header__label">التقييم النفسي</span>
-          <h1>البطارية الإكلينيكية المختصرة</h1>
-          <h3>منظومة فحص سريعة للشخصية، الاكتئاب، القلق، ونوبات الهلع مع مفتاح التصحيح الآلي</h3>
-          <p>
-            يرجى الإجابة عن الأسئلة التالية بدقة، وفقاً لما شعرت به خلال
-            الفترات الزمنية الموضحة في كل قسم.
-          </p>
-        </header>
-
-        <form onSubmit={handleSubmit}>
-          {/* PHQ-9 */}
-
-          <QuestionGroup
-            title="القسم الأول: مقياس الاكتئاب (PHQ-9)"
-            instruction="خلال الأسابيع الأربعة الماضية، كم مرة أزعجتك أي من المشكلات التالية؟"
-            questions={phqQuestions}
-            answers={phqAnswers}
-            onChange={updateAnswer(setPhqAnswers)}
-          />
-
-          {/* GAD-7 */}
-
-          <QuestionGroup
-            title="القسم الثاني: مقياس القلق العام (GAD-7)"
-            instruction="خلال الأسبوعين الماضيين، كم مرة أزعجتك المشكلات التالية؟"
-            questions={gadQuestions}
-            answers={gadAnswers}
-            onChange={updateAnswer(setGadAnswers)}
-          />
-
-          {/* Panic screening */}
-
-          <section className="mht-section">
-            <div className="mht-section__heading">
-              <h2>القسم الثالث: مسح أعراض نوبات الهلع</h2>
-              <p>
-                هل تعرضت خلال الشهر الماضي لنوبات مفاجئة من الخوف الشديد
-                أو عدم الراحة بلغت ذروتها خلال دقائق معدودة؟
-              </p>
-            </div>
-
-            <div className="mht-yes-no">
-              <label
-                className={`mht-yes-no__option ${
-                  panicAnswer === "yes" ? "selected" : ""
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="panic"
-                  checked={panicAnswer === "yes"}
-                  onChange={() => handlePanicAnswer("yes")}
-                />
-                نعم
-              </label>
-
-              <label
-                className={`mht-yes-no__option ${
-                  panicAnswer === "no" ? "selected" : ""
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="panic"
-                  checked={panicAnswer === "no"}
-                  onChange={() => handlePanicAnswer("no")}
-                />
-                لا
-              </label>
-            </div>
-
-            {panicAnswer === "yes" && (
-              <div className="mht-panic">
-                <h3>
-                  هل صاحب النوبة أربعة أعراض أو أكثر من الأعراض التالية؟
-                </h3>
-
-                <p className="mht-panic__hint">
-                  يمكنك اختيار جميع الأعراض التي تعرضت لها.
-                </p>
-
-                <div className="mht-panic__list">
-                  {panicQuestions.map((question, index) => (
-                    <label
-                      className={`mht-panic__item ${
-                        panicSymptoms.includes(index) ? "selected" : ""
-                      }`}
-                      key={index}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={panicSymptoms.includes(index)}
-                        onChange={() => togglePanicSymptom(index)}
-                      />
-                      <span className="mht-checkbox" />
-                      {question}
-                    </label>
-                  ))}
-                </div>
-
-                <p className="mht-panic__count">
-                  عدد الأعراض المختارة: {panicSymptoms.length} من 7
-                </p>
-              </div>
-            )}
-          </section>
-
-          {/* Submit */}
-
-          <div className="mht-actions">
-            <button
-              type="submit"
-              className="mht-submit"
-              disabled={!canSubmit}
-            >
-              عرض نتائج التقييم
-            </button>
-
-            <button
-              type="button"
-              className="mht-reset"
-              onClick={resetTest}
-            >
-              إعادة الاختبار
-            </button>
-          </div>
-
-          {!canSubmit && (
-            <p className="mht-validation">
-              يرجى الإجابة عن جميع أسئلة الاكتئاب والقلق، وتحديد إجابة
-              سؤال نوبات الهلع قبل عرض النتائج.
+    <section id="mentallTest" className="mentallTest">
+      <main className="mht" dir="rtl">
+        <div className="mht-container">
+          <header className="mht-header">
+            <span className="mht-header__label">التقييم النفسي</span>
+            <h1>البطارية الإكلينيكية المختصرة</h1>
+            <h3>
+              منظومة فحص سريعة للشخصية، الاكتئاب، القلق، ونوبات الهلع مع مفتاح
+              التصحيح الآلي
+            </h3>
+            <p>
+              يرجى الإجابة عن الأسئلة التالية بدقة، وفقاً لما شعرت به خلال
+              الفترات الزمنية الموضحة في كل قسم.
             </p>
+          </header>
+
+          <form onSubmit={handleSubmit}>
+            {/* PHQ-9 */}
+
+            <QuestionGroup
+              title="القسم الأول: مقياس الاكتئاب (PHQ-9)"
+              instruction="خلال الأسابيع الأربعة الماضية، كم مرة أزعجتك أي من المشكلات التالية؟"
+              questions={phqQuestions}
+              answers={phqAnswers}
+              onChange={updateAnswer(setPhqAnswers)}
+            />
+
+            {/* GAD-7 */}
+
+            <QuestionGroup
+              title="القسم الثاني: مقياس القلق العام (GAD-7)"
+              instruction="خلال الأسبوعين الماضيين، كم مرة أزعجتك المشكلات التالية؟"
+              questions={gadQuestions}
+              answers={gadAnswers}
+              onChange={updateAnswer(setGadAnswers)}
+            />
+
+            {/* Panic screening */}
+
+            <section className="mht-section">
+              <div className="mht-section__heading">
+                <h2>القسم الثالث: مسح أعراض نوبات الهلع</h2>
+                <p>
+                  هل تعرضت خلال الشهر الماضي لنوبات مفاجئة من الخوف الشديد أو
+                  عدم الراحة بلغت ذروتها خلال دقائق معدودة؟
+                </p>
+              </div>
+
+              <div className="mht-yes-no">
+                <label
+                  className={`mht-yes-no__option ${
+                    panicAnswer === "yes" ? "selected" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="panic"
+                    checked={panicAnswer === "yes"}
+                    onChange={() => handlePanicAnswer("yes")}
+                  />
+                  نعم
+                </label>
+
+                <label
+                  className={`mht-yes-no__option ${
+                    panicAnswer === "no" ? "selected" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="panic"
+                    checked={panicAnswer === "no"}
+                    onChange={() => handlePanicAnswer("no")}
+                  />
+                  لا
+                </label>
+              </div>
+
+              {panicAnswer === "yes" && (
+                <div className="mht-panic">
+                  <h3>
+                    هل صاحب النوبة أربعة أعراض أو أكثر من الأعراض التالية؟
+                  </h3>
+
+                  <p className="mht-panic__hint">
+                    يمكنك اختيار جميع الأعراض التي تعرضت لها.
+                  </p>
+
+                  <div className="mht-panic__list">
+                    {panicQuestions.map((question, index) => (
+                      <label
+                        className={`mht-panic__item ${
+                          panicSymptoms.includes(index) ? "selected" : ""
+                        }`}
+                        key={index}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={panicSymptoms.includes(index)}
+                          onChange={() => togglePanicSymptom(index)}
+                        />
+                        <span className="mht-checkbox" />
+                        {question}
+                      </label>
+                    ))}
+                  </div>
+
+                  <p className="mht-panic__count">
+                    عدد الأعراض المختارة: {panicSymptoms.length} من 7
+                  </p>
+                </div>
+              )}
+            </section>
+
+            {/* Submit */}
+
+            <div className="mht-actions">
+              <button
+                type="submit"
+                className="mht-submit"
+                disabled={!canSubmit}
+              >
+                عرض نتائج التقييم
+              </button>
+
+              <button type="button" className="mht-reset" onClick={resetTest}>
+                إعادة الاختبار
+              </button>
+            </div>
+
+            {!canSubmit && (
+              <p className="mht-validation">
+                يرجى الإجابة عن جميع أسئلة الاكتئاب والقلق، وتحديد إجابة سؤال
+                نوبات الهلع قبل عرض النتائج.
+              </p>
+            )}
+          </form>
+
+          {/* Results */}
+
+          {submitted && (
+            <section className="mht-results" id="mht-results">
+              <div className="mht-results__heading">
+                <span>ملخص التقييم</span>
+                <h2>نتائج المقاييس النفسية</h2>
+                <p>
+                  هذه النتائج مبدئية وتحتاج إلى مراجعة وتفسير من مختص بالصحة
+                  النفسية.
+                </p>
+              </div>
+
+              <div className="mht-result-grid">
+                <article className="mht-result-card">
+                  <span>مقياس الاكتئاب PHQ-9</span>
+                  <strong>{phqScore} / 27</strong>
+                  <p>{getDepressionLevel(phqScore)}</p>
+                </article>
+
+                <article className="mht-result-card">
+                  <span>مقياس القلق GAD-7</span>
+                  <strong>{gadScore} / 21</strong>
+                  <p>{getAnxietyLevel(gadScore)}</p>
+                </article>
+
+                <article className="mht-result-card">
+                  <span>مسح أعراض نوبات الهلع</span>
+                  <strong>
+                    {panicAnswer === "no"
+                      ? "سلبي مبدئياً"
+                      : `${panicSymptoms.length} / 7`}
+                  </strong>
+                  <p>
+                    {panicAnswer === "no"
+                      ? "لم يتم الإبلاغ عن نوبات مفاجئة"
+                      : panicPositive
+                        ? "نتيجة إيجابية مبدئياً"
+                        : "لم تتحقق معايير الفحص المبدئي"}
+                  </p>
+                </article>
+              </div>
+
+              {phqAnswers[8] > 0 && (
+                <div className="mht-alert mht-alert--danger">
+                  <strong>تنبيه سريري مهم - البند التاسع من PHQ-9</strong>
+                  <p>
+                    أشار المريض إلى وجود أفكار متعلقة بالموت أو إيذاء النفس. يجب
+                    إجراء تقييم مباشر وفوري لمخاطر إيذاء الذات، بغض النظر عن
+                    مجموع المقياس. لا تكفي هذه الإجابة وحدها لتحديد مستوى الخطر.
+                  </p>
+                </div>
+              )}
+
+              {panicPositive && (
+                <div className="mht-alert">
+                  <strong>تنبيه: نتيجة إيجابية مبدئياً لفحص الهلع</strong>
+                  <p>
+                    وجود نوبات مفاجئة مع أربعة أعراض أو أكثر يستدعي استكمال
+                    المقابلة الإكلينيكية والتقييم التفصيلي.
+                  </p>
+                </div>
+              )}
+
+              <div className="mht-results__note">
+                <strong>ملاحظة:</strong>
+                <p>
+                  هذه المقاييس أدوات مسح أولية وليست بديلاً عن التقييم والتشخيص
+                  السريري من قبل الطبيب أو المختص.
+                </p>
+              </div>
+
+              <button type="button" className="mht-reset" onClick={resetTest}>
+                إجراء تقييم جديد
+              </button>
+            </section>
           )}
-        </form>
-
-        {/* Results */}
-
-        {submitted && (
-          <section className="mht-results" id="mht-results">
-            <div className="mht-results__heading">
-              <span>ملخص التقييم</span>
-              <h2>نتائج المقاييس النفسية</h2>
-              <p>
-                هذه النتائج مبدئية وتحتاج إلى مراجعة وتفسير من مختص
-                بالصحة النفسية.
-              </p>
-            </div>
-
-            <div className="mht-result-grid">
-              <article className="mht-result-card">
-                <span>مقياس الاكتئاب PHQ-9</span>
-                <strong>{phqScore} / 27</strong>
-                <p>{getDepressionLevel(phqScore)}</p>
-              </article>
-
-              <article className="mht-result-card">
-                <span>مقياس القلق GAD-7</span>
-                <strong>{gadScore} / 21</strong>
-                <p>{getAnxietyLevel(gadScore)}</p>
-              </article>
-
-              <article className="mht-result-card">
-                <span>مسح أعراض نوبات الهلع</span>
-                <strong>
-                  {panicAnswer === "no"
-                    ? "سلبي مبدئياً"
-                    : `${panicSymptoms.length} / 7`}
-                </strong>
-                <p>
-                  {panicAnswer === "no"
-                    ? "لم يتم الإبلاغ عن نوبات مفاجئة"
-                    : panicPositive
-                    ? "نتيجة إيجابية مبدئياً"
-                    : "لم تتحقق معايير الفحص المبدئي"}
-                </p>
-              </article>
-            </div>
-
-            {phqAnswers[8] > 0 && (
-              <div className="mht-alert mht-alert--danger">
-                <strong>تنبيه سريري مهم - البند التاسع من PHQ-9</strong>
-                <p>
-                  أشار المريض إلى وجود أفكار متعلقة بالموت أو إيذاء النفس.
-                  يجب إجراء تقييم مباشر وفوري لمخاطر إيذاء الذات، بغض
-                  النظر عن مجموع المقياس. لا تكفي هذه الإجابة وحدها
-                  لتحديد مستوى الخطر.
-                </p>
-              </div>
-            )}
-
-            {panicPositive && (
-              <div className="mht-alert">
-                <strong>تنبيه: نتيجة إيجابية مبدئياً لفحص الهلع</strong>
-                <p>
-                  وجود نوبات مفاجئة مع أربعة أعراض أو أكثر يستدعي
-                  استكمال المقابلة الإكلينيكية والتقييم التفصيلي.
-                </p>
-              </div>
-            )}
-
-            <div className="mht-results__note">
-              <strong>ملاحظة:</strong>
-              <p>
-                هذه المقاييس أدوات مسح أولية وليست بديلاً عن التقييم
-                والتشخيص السريري من قبل الطبيب أو المختص.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className="mht-reset"
-              onClick={resetTest}
-            >
-              إجراء تقييم جديد
-            </button>
-          </section>
-        )}
-      </div>
-    </main>
+        </div>
+      </main>
+    </section>
   );
 }
