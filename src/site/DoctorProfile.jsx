@@ -1,25 +1,39 @@
 
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
 import { useClinicData } from "../contexts/ClinicDataContext";
+import { WhatsappIcon } from "../components/Icons";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./DoctorProfile.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://api.rouh.ly";
+const WHATSAPP_NUMBER = "218916669082";
 
 export default function DoctorProfile() {
   const { id } = useParams();
-
   const { doctors = [], loading, error } = useClinicData();
 
-  // Find doctor from ClinicDataContext
   const doctor = useMemo(
     () => doctors.find((item) => String(item.id) === String(id)),
     [doctors, id]
   );
 
-  // Support local uploads and external image URLs
+  // Create a WhatsApp booking link for this specific doctor
+  const whatsappUrl = useMemo(() => {
+    if (!doctor) return "";
+
+    const message = [
+      "مرحبًا، أرغب في حجز موعد.",
+      `الطبيب: ${doctor.name || ""}`,
+      `التخصص: ${doctor.specialty || ""}`,
+      "رسوم الكشف: 150 دينار ليبي",
+    ].join("\n");
+
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }, [doctor]);
+
   const getImageUrl = (image) => {
     if (!image) return "";
 
@@ -99,6 +113,40 @@ export default function DoctorProfile() {
                   {doctor.specialty && <p>{doctor.specialty}</p>}
                 </div>
               </div>
+
+              {/* WhatsApp booking and QR code */}
+              <section className="doctor-profile__booking">
+                <div className="doctor-profile__booking-info">
+                  <h2>احجز موعدك الآن</h2>
+
+                  <p>
+                    يمكنك التواصل مع العيادة مباشرة عبر واتساب لحجز موعد مع
+                    {` ${doctor.name}`}.
+                  </p>
+
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="doctor-profile__whatsapp"
+                  >
+                    <WhatsappIcon />
+                    احجز موعد عبر واتساب
+                  </a>
+                </div>
+
+                <div className="doctor-profile__qr">
+                  <QRCodeSVG
+                    value={whatsappUrl}
+                    size={180}
+                    level="H"
+                    includeMargin
+                  />
+
+                  <strong>امسح الرمز للحجز عبر واتساب</strong>
+                  <span>سيتم فتح محادثة حجز مع العيادة</span>
+                </div>
+              </section>
 
               {doctor.bio && (
                 <section className="doctor-profile__section">

@@ -101,6 +101,88 @@
   color: #b42318;
 }
 
+.doctor-profile__booking {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  margin: 35px 0;
+  padding: 30px;
+  background: var(--surface, #f7f6f2);
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 18px;
+}
+
+.doctor-profile__booking-info {
+  flex: 1;
+}
+
+.doctor-profile__booking-info h2 {
+  margin: 0 0 12px;
+}
+
+.doctor-profile__booking-info p {
+  margin-bottom: 22px;
+  line-height: 1.8;
+}
+
+.doctor-profile__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: #25d366;
+  color: #fff;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.doctor-profile__whatsapp:hover {
+  background: #1da851;
+  transform: translateY(-2px);
+}
+
+.doctor-profile__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px;
+  background: #fff;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.doctor-profile__qr strong {
+  font-size: 14px;
+}
+
+.doctor-profile__qr span {
+  color: #777;
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  .doctor-profile__booking {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .doctor-profile__whatsapp {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .doctor-profile__qr {
+    align-self: center;
+  }
+}
+
+
 @media (max-width: 600px) {
   .doctor-profile {
     padding: 20px;
