@@ -10,7 +10,7 @@ const navLinks = [
   { href: "#doctors", label: "الأطباء" },
   { href: "#hours", label: "أوقات العمل" },
   { href: "#location", label: "الموقع" },
-  { href: "#mentalltest", label: "التقييم النفسي" },
+  { href: "#mental-health-section", label: "التقييم النفسي" },
   { href: "#contact", label: "تواصل معنا" },
 
 ];
