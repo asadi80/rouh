@@ -41,6 +41,35 @@ const EMPTY_DATA = {
 };
 
 // ======================================================
+// IN-MEMORY CACHE
+// Resets automatically when the browser is refreshed.
+// ======================================================
+
+let cachedClinicData = null;
+let clinicDataPromise = null;
+
+function getClinicData() {
+  // Already loaded: reuse immediately.
+  if (cachedClinicData) {
+    return Promise.resolve(cachedClinicData);
+  }
+
+  // A request is already running: reuse that request.
+  if (clinicDataPromise) {
+    return clinicDataPromise;
+  }
+
+  // First request.
+  clinicDataPromise = fetchFromApi()
+    .then((result) => {
+      cachedClinicData = result;
+      return result;
+    });
+
+  return clinicDataPromise;
+}
+
+// ======================================================
 // CLINIC SETTINGS
 // ======================================================
 
