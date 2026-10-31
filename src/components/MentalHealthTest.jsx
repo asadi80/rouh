@@ -172,7 +172,7 @@ export default function MentalHealthTest() {
   };
 
   return (
-    <section id="mentallTest" className="mentallTest">
+    <section id="mentalltest" className="mentalltest">
       <main className="mht" dir="rtl">
         <div className="mht-container">
           <header className="mht-header">
