@@ -288,36 +288,39 @@ async function fetchFromApi() {
 // ======================================================
 
 export function ClinicDataProvider({ children }) {
-  const [data, setData] = useState(EMPTY_DATA);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(
+    cachedClinicData || EMPTY_DATA
+  );
+
+  const [loading, setLoading] = useState(
+    !cachedClinicData
+  );
+
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      try {
-        if (!API_URL) {
-          throw new Error(
-            "VITE_API_URL is not configured."
-          );
-        }
+      // If data is already cached, don't fetch again.
+      if (cachedClinicData) {
+        setData(cachedClinicData);
+        setLoading(false);
+        return;
+      }
 
-        const freshData = await fetchFromApi();
+      try {
+        const freshData = await getClinicData();
 
         if (!cancelled) {
           setData(freshData);
           setError(null);
         }
       } catch (err) {
-        console.error(
-          "Failed to load clinic data:",
-          err
-        );
+        console.error("Failed to load clinic data:", err);
 
         if (!cancelled) {
           setError(err.message);
-          // Keep EMPTY_DATA so the application can still render.
         }
       } finally {
         if (!cancelled) {
@@ -332,10 +335,6 @@ export function ClinicDataProvider({ children }) {
       cancelled = true;
     };
   }, []);
-
-  // ====================================================
-  // CONTEXT VALUE
-  // ====================================================
 
   const contextValue = {
     ...EMPTY_DATA,
@@ -356,6 +355,7 @@ export function ClinicDataProvider({ children }) {
       const result = {
         loading,
         error,
+        cached: Boolean(cachedClinicData),
         data,
       };
 
