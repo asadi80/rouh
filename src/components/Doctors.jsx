@@ -1,23 +1,22 @@
+
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useClinicData } from "../contexts/ClinicDataContext";
 import { WhatsappIcon, CalendarIcon, ChevronIcon } from "./Icons";
 import "./Doctors.css";
 
-// Replace these example values with your actual bank information.
 const BANK_INFO = {
   accountNameHolder: "شركة روح العطاء الخيرية",
   accountHolder: "مصحة روح",
-  accountNumber: " 105907165601018",
+  accountNumber: "105907165601018",
   accountInternationalNumber: "LY09027105105907165601018",
-  // iban: "رقم IBAN",
   consultationFee: "150",
   currency: "دينار ليبي",
   bankBranch: "فرع جنزور",
 };
+
 const whatsappNumber = "218916669082";
 
-// Convert supported Google image URLs automatically.
 function getDoctorImageUrl(url) {
   if (!url || typeof url !== "string" || !url.trim()) return "";
 
@@ -36,12 +35,9 @@ function getDoctorImageUrl(url) {
       hostname === "lh3.google.com" ||
       hostname.endsWith(".googleusercontent.com");
 
-    if (!isGoogleDrive && !isGoogleImage) {
-      return originalUrl;
-    }
+    if (!isGoogleDrive && !isGoogleImage) return originalUrl;
 
     const filePathMatch = parsed.pathname.match(/\/file\/d\/([^/]+)/);
-
     const imagePathMatch = parsed.pathname.match(/\/d\/([^/=]+)/);
 
     const fileId =
@@ -51,60 +47,32 @@ function getDoctorImageUrl(url) {
 
     if (!fileId) return originalUrl;
 
-    return (
-      "https://drive.google.com/thumbnail?id=" +
-      encodeURIComponent(fileId) +
-      "&sz=w1000"
-    );
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
   } catch {
     return originalUrl;
   }
 }
 
-// Clipboard only reliably accepts PNG, so convert any image to PNG first.
-function fileToPngBlob(file) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      canvas.getContext("2d").drawImage(img, 0, 0);
-      URL.revokeObjectURL(url);
-      canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("toBlob failed"))),
-        "image/png",
-      );
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Image load failed"));
-    };
-
-    img.src = url;
-  });
-}
-
 export default function Doctors() {
   const {
     doctors = [],
-    clinicInfo = {},
     loadingBySection,
     errorBySection,
   } = useClinicData();
 
   const doctorsLoading = loadingBySection?.doctors ?? false;
   const doctorsError = errorBySection?.doctors;
+
   const [query, setQuery] = useState("");
   const [genderFilter, setGenderFilter] = useState("all");
+  const [specialtyFilter, setSpecialtyFilter] = useState("all");
+
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [expandedDoctors, setExpandedDoctors] = useState({});
+
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState("");
   const [receiptError, setReceiptError] = useState("");
-  const [specialtyFilter, setSpecialtyFilter] = useState("all");
 
   const trackRef = useRef(null);
   const receiptInputRef = useRef(null);
@@ -115,11 +83,17 @@ export default function Doctors() {
     navigate(`/doctors/${doctor.id}`);
   }
 
-  // Get unique specialties from active doctors
+  function toggleDoctorDescription(doctorId) {
+    setExpandedDoctors((previous) => ({
+      ...previous,
+      [doctorId]: !previous[doctorId],
+    }));
+  }
+
   const specialties = useMemo(() => {
     return [
       ...new Set(
-        doctors.map((doctor) => doctor.specialty?.trim()).filter(Boolean),
+        doctors.map((doctor) => doctor.specialty?.trim()).filter(Boolean)
       ),
     ].sort((a, b) => a.localeCompare(b, "ar"));
   }, [doctors]);
@@ -128,16 +102,14 @@ export default function Doctors() {
     const q = query.trim().toLowerCase();
 
     return doctors.filter((doctor) => {
-      // Gender filter
       const matchesGender =
-        genderFilter === "all" || doctor.gender?.toLowerCase() === genderFilter;
+        genderFilter === "all" ||
+        doctor.gender?.toLowerCase() === genderFilter;
 
-      // Specialty filter
       const matchesSpecialty =
         specialtyFilter === "all" ||
         doctor.specialty?.trim() === specialtyFilter;
 
-      // Search filter
       const matchesSearch =
         !q ||
         (doctor.name || "").toLowerCase().includes(q) ||
@@ -218,7 +190,6 @@ export default function Doctors() {
 
   function handleReceiptChange(event) {
     const file = event.target.files?.[0];
-
     if (!file) return;
 
     setReceiptError("");
@@ -253,35 +224,6 @@ export default function Doctors() {
     reader.readAsDataURL(file);
   }
 
-  // async function sendBookingToWhatsApp() {
-  //   if (!selectedDoctor || !receiptFile) {
-  //     setReceiptError("يرجى اختيار صورة إيصال الدفع أولاً.");
-  //     return;
-  //   }
-
-  //   const message = [
-  //     "مرحبًا، أرغب في حجز موعد.",
-  //     `الطبيب: ${selectedDoctor.name || ""}`,
-  //     `التخصص: ${selectedDoctor.specialty || ""}`,
-  //   ].join("\n");
-
-  //   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-  //   // Copy the receipt image to the clipboard (passing a promise keeps
-  //   // the user-gesture valid, which Safari requires).
-  //   try {
-  //     if (navigator.clipboard && window.ClipboardItem) {
-  //       await navigator.clipboard.write([
-  //         new ClipboardItem({ "image/png": fileToPngBlob(receiptFile) }),
-  //       ]);
-  //     }
-  //   } catch (error) {
-  //     console.error("Copying receipt failed:", error);
-  //   }
-
-  //   window.location.href = whatsappUrl;
-  // }
-
   function sendBookingToWhatsApp() {
     if (!selectedDoctor) return;
 
@@ -293,7 +235,8 @@ export default function Doctors() {
       "سأرسل إيصال الدفع في المحادثة إذا لزم الأمر.",
     ].join("\n");
 
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl =
+      `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     window.location.href = whatsappUrl;
   }
@@ -313,6 +256,8 @@ export default function Doctors() {
             مباشرة عبر واتساب.
           </p>
         </div>
+
+        {/* Filters */}
         <div className="doctors__filters">
           <div className="doctors__search">
             <input
@@ -322,12 +267,12 @@ export default function Doctors() {
               placeholder="ابحث بالاسم أو التخصص..."
               aria-label="البحث عن طبيب"
             />
+
             <span className="doctors__count">
               {doctorsLoading ? "جارٍ التحميل..." : `${filtered.length} طبيب`}
-            </span>{" "}
+            </span>
           </div>
 
-          {/* Specialty filter */}
           <div className="doctors__specialty-filter">
             <select
               value={specialtyFilter}
@@ -345,7 +290,6 @@ export default function Doctors() {
             </select>
           </div>
 
-          {/* Gender filter */}
           <div className="doctors__gender-filter" dir="rtl">
             <button
               type="button"
@@ -373,11 +317,15 @@ export default function Doctors() {
           </div>
         </div>
 
+        {/* Loading */}
         {doctorsLoading ? (
           <div className="doctors__carousel">
             <div className="doctors__track doctors__track--loading">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div className="doctor-card doctor-card--skeleton" key={index}>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  className="doctor-card doctor-card--skeleton"
+                  key={index}
+                >
                   <div className="doctor-card__top">
                     <div className="skeleton skeleton-avatar" />
 
@@ -388,7 +336,6 @@ export default function Doctors() {
                   </div>
 
                   <div className="skeleton skeleton-specialty" />
-
                   <div className="skeleton skeleton-line" />
                   <div className="skeleton skeleton-line skeleton-line--short" />
 
@@ -412,6 +359,7 @@ export default function Doctors() {
             لا توجد نتائج مطابقة لبحثك. جرّب كلمة أخرى.
           </p>
         ) : (
+          /* Doctors carousel */
           <div className="doctors__carousel">
             <button
               type="button"
@@ -425,15 +373,23 @@ export default function Doctors() {
             <div className="doctors__track" ref={trackRef}>
               {filtered.map((doctor) => {
                 const imageUrl = getDoctorImageUrl(doctor.image);
+                const bio = doctor.bio || "";
+                const isExpanded = !!expandedDoctors[doctor.id];
+                const hasLongBio = bio.length > 130;
 
                 return (
-                  <article className="doctor-card" key={doctor.id}>
+                  <article
+                    className="doctor-card"
+                    key={doctor.id}
+                    dir="rtl"
+                  >
+                    {/* Doctor header */}
                     <div className="doctor-card__top">
                       {imageUrl ? (
                         <img
                           className="doctor-card__photo"
                           src={imageUrl}
-                          alt={doctor.name}
+                          alt={doctor.name || "الطبيب"}
                           loading="lazy"
                           onError={(event) => {
                             event.currentTarget.style.display = "none";
@@ -445,24 +401,57 @@ export default function Doctors() {
                         </div>
                       )}
 
-                      <div>
-                        <h3>{doctor.name}</h3>
-                        <p className="doctor-card__title">
+                      <div className="doctor-card__identity">
+                        <h3 title={doctor.name}>
+                          {doctor.name}
+                        </h3>
+
+                        <p
+                          className="doctor-card__title"
+                          title={doctor.title || doctor.specialty}
+                        >
                           {doctor.title || doctor.specialty}
                         </p>
                       </div>
                     </div>
 
+                    {/* Specialty */}
                     {doctor.specialty && (
-                      <span className="doctor-card__specialty">
+                      <span
+                        className="doctor-card__specialty"
+                        title={doctor.specialty}
+                      >
                         {doctor.specialty}
                       </span>
                     )}
 
-                    {doctor.bio && (
-                      <p className="doctor-card__bio">{doctor.bio}</p>
+                    {/* Description with see more */}
+                    {bio && (
+                      <div className="doctor-card__description">
+                        <p
+                          className={`doctor-card__bio ${
+                            isExpanded ? "doctor-card__bio--expanded" : ""
+                          }`}
+                        >
+                          {bio}
+                        </p>
+
+                        {hasLongBio && (
+                          <button
+                            type="button"
+                            className="doctor-card__read-more"
+                            aria-expanded={isExpanded}
+                            onClick={() =>
+                              toggleDoctorDescription(doctor.id)
+                            }
+                          >
+                            {isExpanded ? "عرض أقل" : "اقرأ المزيد"}
+                          </button>
+                        )}
+                      </div>
                     )}
 
+                    {/* Schedule */}
                     <div className="doctor-card__schedule">
                       <span className="doctor-card__schedule-label">
                         مواعيد العمل
@@ -494,6 +483,7 @@ export default function Doctors() {
                             return (
                               <li key={index}>
                                 <span>{item.day}</span>
+
                                 <span className="doctor-card__schedule-time">
                                   {formatScheduleTime(item.time)}
                                 </span>
@@ -506,21 +496,24 @@ export default function Doctors() {
                       )}
                     </div>
 
-                    <button
-                      type="button"
-                      className="btn btn-primary doctor-card__cta"
-                      onClick={() => openPaymentModal(doctor)}
-                    >
-                      احجز موعدك
-                    </button>
+                    {/* Buttons */}
+                    <div className="doctor-card__actions">
+                      <button
+                        type="button"
+                        className="btn btn-primary doctor-card__cta"
+                        onClick={() => openPaymentModal(doctor)}
+                      >
+                        احجز موعدك
+                      </button>
 
-                    <button
-                      type="button"
-                      className="btn doctor-card__cta"
-                      onClick={() => openDoctorProfile(doctor)}
-                    >
-                      الملف الشخصي
-                    </button>
+                      <button
+                        type="button"
+                        className="doctor-card__profile"
+                        onClick={() => openDoctorProfile(doctor)}
+                      >
+                        عرض الملف الشخصي
+                      </button>
+                    </div>
                   </article>
                 );
               })}
@@ -538,6 +531,7 @@ export default function Doctors() {
         )}
       </div>
 
+      {/* Payment modal */}
       {selectedDoctor && (
         <div
           className="payment-modal__overlay"
@@ -597,11 +591,6 @@ export default function Doctors() {
                 <strong>{BANK_INFO.bankBranch}</strong>
               </div>
 
-              {/* <div className="payment-modal__row">
-                <span>IBAN</span>
-                <strong>{BANK_INFO.iban}</strong>
-              </div> */}
-
               <div className="payment-modal__fee">
                 <span>رسوم الكشف</span>
                 <strong>
@@ -613,7 +602,7 @@ export default function Doctors() {
             <label className="payment-modal__upload">
               <span>إرفاق صورة إيصال التحويل</span>
 
-              {/* <input
+              <input
                 ref={receiptInputRef}
                 type="file"
                 accept="image/*"
@@ -622,10 +611,10 @@ export default function Doctors() {
 
               <span className="payment-modal__upload-hint">
                 اختر صورة الإيصال من هاتفك أو جهازك (10 ميجابايت كحد أقصى).
-              </span> */}
+              </span>
             </label>
 
-            {/* {receiptPreview && (
+            {receiptPreview && (
               <div className="payment-modal__preview">
                 <img src={receiptPreview} alt="معاينة إيصال الدفع" />
 
@@ -647,7 +636,7 @@ export default function Doctors() {
                   إزالة الصورة
                 </button>
               </div>
-            )} */}
+            )}
 
             {receiptError && (
               <p className="payment-modal__error" role="status">
@@ -658,7 +647,6 @@ export default function Doctors() {
             <button
               type="button"
               className="btn btn-primary payment-modal__whatsapp"
-              // disabled={!receiptFile}
               onClick={sendBookingToWhatsApp}
             >
               <WhatsappIcon />
@@ -666,9 +654,9 @@ export default function Doctors() {
             </button>
 
             <p className="payment-modal__note">
-              عند الضغط على الزر سيتم نسخ صورة الإيصال وفتح محادثة واتساب. اضغط
-              مطولاً على خانة الكتابة ثم اختر "لصق" لإرسال الإيصال. لا يعتبر
-              الحجز مؤكداً إلا بعد مراجعة الدفع وتأكيد العيادة.
+              عند الضغط على الزر سيتم فتح محادثة واتساب. يمكنك إرسال صورة
+              الإيصال في المحادثة. لا يعتبر الحجز مؤكداً إلا بعد مراجعة
+              الدفع وتأكيد العيادة.
             </p>
           </div>
         </div>
