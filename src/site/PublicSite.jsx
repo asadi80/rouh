@@ -1,10 +1,10 @@
-//src/site/PuplicSite
+
+// src/site/PublicSite.jsx
+
 import { useState } from "react";
 
-import {
-  ClinicDataProvider,
-  useClinicData,
-} from "../contexts/ClinicDataContext";
+import { ClinicDataProvider } from "../contexts/ClinicDataContext";
+
 import AnnouncementBar from "../components/AnnouncementBar";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
@@ -21,46 +21,33 @@ import MentalHealthTest from "../components/MentalHealthTest";
 
 function SiteContent() {
   const [showMentalHealthTest, setShowMentalHealthTest] = useState(false);
-  const { loading } = useClinicData();
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "var(--ink-faint)",
-          fontSize: 15,
-        }}
-      >
-        جارٍ التحميل...
-      </div>
-    );
-  }
 
   return (
     <>
       <AnnouncementBar />
       <Header />
+
       <main>
         <Hero />
         <Services />
         <WhyUs />
         <Doctors />
+
         <div className="container">
           <PulseDivider flat />
         </div>
 
-        <section id="mental-health-section" className="mental-health-section">
+        <section
+          id="mental-health-section"
+          className="mental-health-section"
+        >
           <div className="container">
             {!showMentalHealthTest ? (
               <div className="mental-health-intro">
                 <h2>اطمئن على صحتك النفسية</h2>
                 <p>
-                  أجب عن مجموعة من الأسئلة القصيرة للحصول على تقييم أولي لمستوى
-                  الصحة النفسية.
+                  أجب عن مجموعة من الأسئلة القصيرة للحصول على تقييم أولي
+                  لمستوى الصحة النفسية.
                 </p>
 
                 <button
@@ -86,10 +73,12 @@ function SiteContent() {
             )}
           </div>
         </section>
+
         <WorkingHours />
         <Location />
         <Social />
       </main>
+
       <Footer />
       <QuickActions />
     </>

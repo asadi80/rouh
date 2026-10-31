@@ -676,3 +676,136 @@
     font-size: 12px;
   }
 }
+/* =========================================
+   DOCTORS SKELETON LOADING
+========================================= */
+
+.doctors__track--loading {
+  pointer-events: none;
+  scrollbar-width: none;
+}
+
+.doctors__track--loading::-webkit-scrollbar {
+  display: none;
+}
+
+.doctor-card--skeleton {
+  cursor: default;
+  min-height: 440px;
+  flex: 0 0 clamp(260px, 32vw, 320px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.doctor-card--skeleton:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e9eeec;
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.75),
+    transparent
+  );
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.skeleton-avatar {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-title {
+  width: 85%;
+  height: 17px;
+}
+
+.skeleton-subtitle {
+  width: 65%;
+  height: 12px;
+}
+
+.skeleton-specialty {
+  width: 55%;
+  height: 25px;
+  margin-top: 4px;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 13px;
+  margin-bottom: 8px;
+}
+
+.skeleton-line--short {
+  width: 65%;
+}
+
+.skeleton-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  margin-top: auto;
+  border-top: 1px dashed var(--line);
+}
+
+.skeleton-button {
+  width: 100%;
+  height: 44px;
+  margin-top: auto;
+  border-radius: var(--radius-pill);
+}
+
+.doctor-card--skeleton .doctor-card__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+@media (max-width: 480px) {
+  .doctor-card--skeleton {
+    flex-basis: 85%;
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}
