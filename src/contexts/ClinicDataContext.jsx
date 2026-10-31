@@ -1,206 +1,368 @@
-//ClinicDataContext.jsx
-import { createContext, useContext, useEffect, useState } from "react";
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const ClinicDataContext = createContext(null);
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = (
+  import.meta.env.VITE_API_URL || "https://api.rouh.ly"
+).replace(/\/$/, "");
+
+// ======================================================
+// DEFAULT DATA
+// ======================================================
+
+const EMPTY_CLINIC_INFO = {
+  name: "عيادة روحي",
+  shortName: "روحي",
+  tagline: "",
+  description: "",
+  phone: "",
+  phoneDisplay: "",
+  whatsapp: "",
+  email: "",
+  address: "",
+  googleMapsUrl: "",
+  googleMapsEmbedUrl: "",
+};
+
+const EMPTY_DATA = {
+  clinicInfo: EMPTY_CLINIC_INFO,
+  socialLinks: [],
+  workingHours: [],
+  doctors: [],
+  services: [],
+  whyUs: [],
+  stats: [],
+};
+
+// ======================================================
+// CLINIC SETTINGS
+// ======================================================
 
 function mapSettingsToClinicInfo(row) {
-  if (!row) return null;
-  
+  if (!row || typeof row !== "object") {
+    return EMPTY_CLINIC_INFO;
+  }
+
   const waMatch = row.whatsapp_url?.match(/wa\.me\/(\d+)/);
+
   return {
-    name: row.name,
-    shortName: row.short_name,
-    tagline: row.tagline,
-    description: row.description,
-    phone: row.phone,
-    phoneDisplay: row.phone,
-    whatsapp: waMatch ? waMatch[1] : row.phone?.replace(/\D/g, ""),
-    email: row.email,
-    address: row.address,
-    googleMapsUrl: row.google_maps_url,
-    googleMapsEmbedUrl: row.google_maps_embed_url,
+    name: row.name || EMPTY_CLINIC_INFO.name,
+    shortName: row.short_name || EMPTY_CLINIC_INFO.shortName,
+    tagline: row.tagline || "",
+    description: row.description || "",
+    phone: row.phone || "",
+    phoneDisplay: row.phone || "",
+    whatsapp: waMatch
+      ? waMatch[1]
+      : row.phone?.replace(/\D/g, "") || "",
+    email: row.email || "",
+    address: row.address || "",
+    googleMapsUrl: row.google_maps_url || "",
+    googleMapsEmbedUrl: row.google_maps_embed_url || "",
   };
 }
 
+// ======================================================
+// SOCIAL LINKS
+// ======================================================
+
 function mapSettingsToSocialLinks(row) {
-  if (!row) return [];
-  
+  if (!row || typeof row !== "object") return [];
+
   const candidates = [
-    { id: "instagram", label: "انستغرام", url: row.instagram_url },
-    { id: "whatsapp", label: "واتساب", url: row.whatsapp_url },
-    { id: "twitter", label: "X (تويتر)", url: row.twitter_url },
-    { id: "facebook", label: "فيسبوك", url: row.facebook_url },
-    { id: "tiktok", label: "تيك توك", url: row.tiktok_url },
-    { id: "snapchat", label: "سناب شات", url: row.snapchat_url },
+    {
+      id: "instagram",
+      label: "انستغرام",
+      url: row.instagram_url,
+    },
+    {
+      id: "whatsapp",
+      label: "واتساب",
+      url: row.whatsapp_url,
+    },
+    {
+      id: "twitter",
+      label: "X (تويتر)",
+      url: row.twitter_url,
+    },
+    {
+      id: "facebook",
+      label: "فيسبوك",
+      url: row.facebook_url,
+    },
+    {
+      id: "tiktok",
+      label: "تيك توك",
+      url: row.tiktok_url,
+    },
+    {
+      id: "snapchat",
+      label: "سناب شات",
+      url: row.snapchat_url,
+    },
   ];
-  return candidates.filter((c) => c.url && c.url.trim() !== "");
+
+  return candidates.filter(
+    (item) =>
+      typeof item.url === "string" &&
+      item.url.trim() !== ""
+  );
 }
+
+// ======================================================
+// API REQUEST
+// ======================================================
 
 async function fetchJson(path) {
   const url = `${API_URL}${path}`;
-  // console.log(`📡 Fetching: ${url}`);
 
-  const res = await fetch(url);
-  const text = await res.text();
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
 
-  // console.log(`📥 Response status for ${path}:`, res.status);
+  const text = await response.text();
 
-  if (!res.ok) {
-    throw new Error(`فشل تحميل ${path} (${res.status}): ${text || "Empty response"}`);
+  if (!response.ok) {
+    throw new Error(
+      `فشل تحميل ${path} (${response.status}): ${
+        text || "Empty response"
+      }`
+    );
   }
 
   if (!text.trim()) {
-    throw new Error(`الـ API أعاد استجابة فارغة: ${path}`);
+    throw new Error(`استجابة فارغة من ${path}`);
   }
 
   try {
-    const parsed = JSON.parse(text);
-    // console.log(`✅ Successfully parsed JSON for ${path}:`, parsed);
-    return parsed;
-  } catch (err) {
-    console.error(`❌ Invalid JSON from ${url}:`, text);
-    throw new Error(`استجابة غير صالحة من ${path}: ${text.slice(0, 200)}`);
+    return JSON.parse(text);
+  } catch {
+    console.error("Invalid API JSON:", url, text);
+
+    throw new Error(
+      `استجابة غير صالحة من ${path}`
+    );
   }
 }
 
+// ======================================================
+// NORMALIZE API ARRAYS
+// ======================================================
+
+function normalizeArray(result, key) {
+  if (Array.isArray(result)) return result;
+
+  if (key && Array.isArray(result?.[key])) {
+    return result[key];
+  }
+
+  if (Array.isArray(result?.data)) {
+    return result.data;
+  }
+
+  return [];
+}
+
+// ======================================================
+// FETCH ALL CLINIC DATA INDEPENDENTLY
+// ======================================================
+
 async function fetchFromApi() {
-  // console.log("🚀 Starting to fetch all API data...");
-  // console.log(`🔗 API_URL: ${API_URL}`);
+  const endpoints = [
+    {
+      key: "settings",
+      path: "/api/settings",
+    },
+    {
+      key: "hours",
+      path: "/api/working-hours",
+    },
+    {
+      key: "doctors",
+      path: "/api/doctors",
+    },
+    {
+      key: "services",
+      path: "/api/services",
+    },
+    {
+      key: "whyUs",
+      path: "/api/why-us",
+    },
+  ];
 
-  // Fetch all routes - if any fails, throw error
-  const [settings, hours, doctors, services, whyUs] = await Promise.all([
-    fetchJson("/api/settings"),
-    fetchJson("/api/working-hours"),
-    fetchJson("/api/doctors"),
-    fetchJson("/api/services"),
-    fetchJson("/api/why-us"),
-  ]);
+  const responses = await Promise.allSettled(
+    endpoints.map((endpoint) =>
+      fetchJson(endpoint.path)
+    )
+  );
 
-  // console.log("📊 Raw API Data Summary:");
-  // console.log("  • Settings:", settings);
-  // console.log("  • Working Hours:", hours);
-  console.log("  • Doctors:", doctors);
-  // console.log("  • Services:", services);
-  // console.log("  • Why Us:", whyUs);
+  const rawData = {};
 
-  // Process the data
+  responses.forEach((response, index) => {
+    const endpoint = endpoints[index];
+
+    if (response.status === "fulfilled") {
+      rawData[endpoint.key] = response.value;
+    } else {
+      rawData[endpoint.key] = null;
+
+      console.error(
+        `Failed to load ${endpoint.path}:`,
+        response.reason
+      );
+    }
+  });
+
+  // Settings
+  const settings = rawData.settings;
+
   const clinicInfo = mapSettingsToClinicInfo(settings);
+
   const socialLinks = mapSettingsToSocialLinks(settings);
-  
-  const workingHours = Array.isArray(hours) 
-    ? hours.map((h) => ({
-        day: h.day_of_week || h.day || "",
-        hours: h.hours_text || h.hours || "",
-        isOpen: h.is_open !== undefined ? h.is_open : true,
-      }))
-    : [];
 
-  const processedServices = Array.isArray(services)
-    ? services.map((s) => ({ 
-        icon: s.icon || "🏥", 
-        title: s.title || "Service", 
-        desc: s.description || s.desc || "",
-      }))
-    : [];
+  // Working hours
+  const hours = normalizeArray(rawData.hours, "workingHours");
 
-  const processedWhyUs = Array.isArray(whyUs)
-    ? whyUs.map((w) => ({ 
-        icon: w.icon || "⭐", 
-        title: w.title || "Why Us", 
-        desc: w.description || w.desc || "",
-      }))
-    : [];
+  const workingHours = hours.map((item) => ({
+    day: item.day_of_week || item.day || "",
+    hours: item.hours_text || item.hours || "",
+    isOpen:
+      item.is_open !== undefined
+        ? item.is_open
+        : true,
+  }));
+
+  // Doctors
+  const doctors = normalizeArray(rawData.doctors, "doctors");
+
+  // Services
+  const services = normalizeArray(rawData.services, "services");
+
+  const processedServices = services.map((item) => ({
+    icon: item.icon || "🏥",
+    title: item.title || "Service",
+    desc: item.description || item.desc || "",
+  }));
+
+  // Why us
+  const whyUs = normalizeArray(rawData.whyUs, "whyUs");
+
+  const processedWhyUs = whyUs.map((item) => ({
+    icon: item.icon || "⭐",
+    title: item.title || "Why Us",
+    desc: item.description || item.desc || "",
+  }));
 
   const result = {
     clinicInfo,
     socialLinks,
     workingHours,
-    doctors: Array.isArray(doctors) ? doctors : [],
+    doctors,
     services: processedServices,
     whyUs: processedWhyUs,
-    stats: [], // يمكن إضافة إحصائيات من الـ API لاحقاً
+    stats: [],
   };
 
-  // console.log("✅ Final processed data:", result);
-  // console.log("📊 Data counts:");
-  // console.log("  • Clinic Info:", Object.keys(clinicInfo).length, "fields");
-  // console.log("  • Social Links:", socialLinks.length, "items");
-  // console.log("  • Working Hours:", workingHours.length, "items");
-  console.log("  • Doctors:", doctors.length, "items");
-  // console.log("  • Services:", processedServices.length, "items");
-  // console.log("  • Why Us:", processedWhyUs.length, "items");
+  console.log("Clinic data loaded:", {
+    doctors: doctors.length,
+    workingHours: workingHours.length,
+    services: processedServices.length,
+    whyUs: processedWhyUs.length,
+    clinicInfo: Boolean(settings),
+  });
 
   return result;
 }
 
+// ======================================================
+// CLINIC DATA PROVIDER
+// ======================================================
+
 export function ClinicDataProvider({ children }) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(EMPTY_DATA);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
-   
     async function load() {
-      if (!API_URL) {
-        const errorMsg = "❌ VITE_API_URL is not defined. Please create a .env file with your backend URL.";
-        console.error(errorMsg);
-      
-        if (!cancelled) {
-          setError(errorMsg);
-          setLoading(false);
-        }
-        return;
-      }
-
       try {
-        const fresh = await fetchFromApi();
+        if (!API_URL) {
+          throw new Error(
+            "VITE_API_URL is not configured."
+          );
+        }
+
+        const freshData = await fetchFromApi();
+
         if (!cancelled) {
-          // console.log("✅ Setting data in state:", fresh);
-          setData(fresh);
+          setData(freshData);
           setError(null);
-          setLoading(false);
         }
       } catch (err) {
-        console.error("❌ Failed to load clinic data from server:", err);
-        console.error("❌ Error details:", err.message);
-        console.error("❌ Error stack:", err.stack);
-        
+        console.error(
+          "Failed to load clinic data:",
+          err
+        );
+
         if (!cancelled) {
-          setError(`❌ Failed to load data: ${err.message}`);
+          setError(err.message);
+          // Keep EMPTY_DATA so the application can still render.
+        }
+      } finally {
+        if (!cancelled) {
           setLoading(false);
         }
       }
     }
 
     load();
+
     return () => {
-      // console.log("🧹 Cleaning up ClinicDataProvider");
       cancelled = true;
     };
   }, []);
 
-  const contextValue = { 
-    ...data, 
-    loading, 
+  // ====================================================
+  // CONTEXT VALUE
+  // ====================================================
+
+  const contextValue = {
+    ...EMPTY_DATA,
+    ...data,
+
+    clinicInfo: data?.clinicInfo || EMPTY_CLINIC_INFO,
+    socialLinks: data?.socialLinks || [],
+    workingHours: data?.workingHours || [],
+    doctors: data?.doctors || [],
+    services: data?.services || [],
+    whyUs: data?.whyUs || [],
+    stats: data?.stats || [],
+
+    loading,
     error,
+
     debug: () => {
-      // console.log("🔍 Current Context Data:");
-      // console.log("  • loading:", loading);
-      // console.log("  • error:", error);
-      // console.log("  • data:", data);
-      // console.log("  • clinicInfo:", data?.clinicInfo);
-      // console.log("  • socialLinks:", data?.socialLinks);
-      // console.log("  • workingHours:", data?.workingHours);
-      console.log("  • doctors:", data?.doctors);
-      // console.log("  • services:", data?.services);
-      // console.log("  • whyUs:", data?.whyUs);
-      // console.log("  • stats:", data?.stats);
-      return { loading, error, data };
-    }
+      const result = {
+        loading,
+        error,
+        data,
+      };
+
+      console.log("Clinic Data Debug:", result);
+
+      return result;
+    },
   };
 
   return (
@@ -210,8 +372,18 @@ export function ClinicDataProvider({ children }) {
   );
 }
 
+// ======================================================
+// CUSTOM HOOK
+// ======================================================
+
 export function useClinicData() {
-  const ctx = useContext(ClinicDataContext);
-  if (!ctx) throw new Error("useClinicData must be used within ClinicDataProvider");
-  return ctx;
+  const context = useContext(ClinicDataContext);
+
+  if (!context) {
+    throw new Error(
+      "useClinicData must be used within ClinicDataProvider"
+    );
+  }
+
+  return context;
 }
