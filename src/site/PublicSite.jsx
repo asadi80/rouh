@@ -52,7 +52,7 @@ function SiteContent() {
         <div className="container">
           <PulseDivider flat />
         </div>
-        <section className="mental-health-section">
+        <section id="mentalltest" className="mentalltest">
           <div className="container">
             {!showMentalHealthTest ? (
               <div className="mental-health-intro">
