@@ -112,7 +112,7 @@
   gap: 35px;
   margin: 35px 0;
   padding: 30px;
-  background: #f7f9f7;
+  background: #a3c17e;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -242,7 +242,7 @@
 .doctor-profile__details > div {
   min-width: 0;
   padding: 18px;
-  background: #f7f9f7;
+  background: #a3c17e;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   transition: border-color 0.2s ease, transform 0.2s ease;
@@ -287,7 +287,7 @@
 }
 
 .doctor-profile__schedule > div:nth-child(odd) {
-  background: #f7f9f7;
+  background: #a3c17e;
 }
 
 .doctor-profile__schedule strong {
@@ -441,7 +441,7 @@
 
 .payment-modal__bank {
   padding: 20px;
-  background: #f7f9f7;
+  background: #a3c17e;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
