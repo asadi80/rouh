@@ -1,12 +1,12 @@
 
 /* =========================================================
-   DOCTOR PROFILE — ROUHLY DESIGN SYSTEM
+   DOCTOR PROFILE — ROUHLY MAIN WEBSITE DESIGN
 ========================================================= */
 
 .doctor-profile-page {
   min-height: 70vh;
   padding: 50px 0 90px;
-  background: var(--sage-100);
+  background: var(--white);
   color: var(--ink);
   font-family: var(--font-body);
 }
@@ -18,9 +18,7 @@
   padding-inline: 22px;
 }
 
-/* =========================================================
-   BACK BUTTON
-========================================================= */
+/* BACK BUTTON */
 
 .doctor-profile-back {
   display: inline-flex;
@@ -36,9 +34,7 @@
   color: var(--teal-500);
 }
 
-/* =========================================================
-   MAIN PROFILE CARD
-========================================================= */
+/* MAIN PROFILE CARD */
 
 .doctor-profile {
   width: 100%;
@@ -48,12 +44,10 @@
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
-/* =========================================================
-   DOCTOR HEADER
-========================================================= */
+/* DOCTOR HEADER */
 
 .doctor-profile__top {
   display: flex;
@@ -71,7 +65,7 @@
   overflow: hidden;
   place-items: center;
   border-radius: var(--radius-md);
-  background: var(--sage-100);
+  background: #f5f8f6;
   color: var(--teal-700);
   font-family: var(--font-display);
   font-size: 45px;
@@ -109,9 +103,7 @@
   font-weight: 700;
 }
 
-/* =========================================================
-   BOOKING SECTION
-========================================================= */
+/* BOOKING SECTION */
 
 .doctor-profile__booking {
   display: flex;
@@ -120,7 +112,7 @@
   gap: 35px;
   margin: 35px 0;
   padding: 30px;
-  background: var(--cream);
+  background: #f7f9f7;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -176,9 +168,7 @@
   flex-shrink: 0;
 }
 
-/* =========================================================
-   QR CODE
-========================================================= */
+/* QR CODE */
 
 .doctor-profile__qr {
   display: flex;
@@ -215,9 +205,7 @@
   line-height: 1.8;
 }
 
-/* =========================================================
-   PROFILE SECTIONS
-========================================================= */
+/* PROFILE SECTIONS */
 
 .doctor-profile__section {
   padding: 28px 0;
@@ -243,9 +231,7 @@
   overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   QUALIFICATIONS
-========================================================= */
+/* QUALIFICATIONS */
 
 .doctor-profile__details {
   display: grid;
@@ -256,9 +242,15 @@
 .doctor-profile__details > div {
   min-width: 0;
   padding: 18px;
-  background: var(--sage-100);
+  background: #f7f9f7;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.doctor-profile__details > div:hover {
+  border-color: var(--sage-300);
+  transform: translateY(-2px);
 }
 
 .doctor-profile__details strong {
@@ -276,9 +268,7 @@
   overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   WORKING SCHEDULE
-========================================================= */
+/* WORKING SCHEDULE */
 
 .doctor-profile__schedule {
   display: flex;
@@ -297,7 +287,7 @@
 }
 
 .doctor-profile__schedule > div:nth-child(odd) {
-  background: var(--sage-100);
+  background: #f7f9f7;
 }
 
 .doctor-profile__schedule strong {
@@ -314,9 +304,7 @@
   overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   LOADING
-========================================================= */
+/* LOADING */
 
 .doctor-profile-message {
   padding: 55px 15px;
@@ -344,9 +332,7 @@
   }
 }
 
-/* =========================================================
-   ERROR STATE
-========================================================= */
+/* ERROR STATE */
 
 .doctor-profile-status {
   max-width: 650px;
@@ -392,9 +378,7 @@
   transform: translateY(-2px);
 }
 
-/* =========================================================
-   PAYMENT MODAL
-========================================================= */
+/* PAYMENT MODAL */
 
 .payment-modal__overlay {
   position: fixed;
@@ -431,10 +415,14 @@
   place-items: center;
   border: none;
   border-radius: 50%;
-  background: var(--sage-100);
+  background: #f1f5f2;
   color: var(--teal-900);
   font-size: 24px;
   cursor: pointer;
+}
+
+.payment-modal__close:hover {
+  background: var(--sage-100);
 }
 
 .payment-modal h2 {
@@ -453,7 +441,7 @@
 
 .payment-modal__bank {
   padding: 20px;
-  background: var(--sage-100);
+  background: #f7f9f7;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -494,7 +482,7 @@
   margin-top: 12px;
   padding: 15px;
   background: var(--white);
-  border: none;
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
 
@@ -516,9 +504,7 @@
   text-align: center;
 }
 
-/* =========================================================
-   TABLET RESPONSIVE
-========================================================= */
+/* TABLET */
 
 @media (max-width: 768px) {
   .doctor-profile-page {
@@ -540,9 +526,7 @@
   }
 }
 
-/* =========================================================
-   MOBILE RESPONSIVE
-========================================================= */
+/* MOBILE */
 
 @media (max-width: 650px) {
   .doctor-profile-page {
@@ -621,9 +605,7 @@
   }
 }
 
-/* =========================================================
-   EXTRA SMALL SCREENS
-========================================================= */
+/* EXTRA SMALL SCREENS */
 
 @media (max-width: 380px) {
   .doctor-profile {
