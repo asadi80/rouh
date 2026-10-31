@@ -20,7 +20,7 @@ export default function DoctorProfile() {
     [doctors, id]
   );
 
-  // Create a WhatsApp booking link for this specific doctor
+  // WhatsApp booking link for this doctor
   const whatsappUrl = useMemo(() => {
     if (!doctor) return "";
 
@@ -34,14 +34,25 @@ export default function DoctorProfile() {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   }, [doctor]);
 
+  // QR code opens the doctor's profile on your website
+  const profileUrl = useMemo(() => {
+    if (!doctor || typeof window === "undefined") return "";
+
+    return `${window.location.origin}/doctors/${encodeURIComponent(doctor.id)}`;
+  }, [doctor]);
+
+  // Resolve doctor image URL
   const getImageUrl = (image) => {
     if (!image) return "";
 
-    if (/^https?:\/\//i.test(image)) return image;
+    if (/^https?:\/\//i.test(image)) {
+      return image;
+    }
 
     return `${API_URL}${image.startsWith("/") ? "" : "/"}${image}`;
   };
 
+  // Doctor qualifications
   const qualifications = doctor
     ? [
         ["الجامعة / كلية الطب", doctor.medical_school],
@@ -58,7 +69,12 @@ export default function DoctorProfile() {
             ? doctor.languages.join("، ")
             : doctor.languages,
         ],
-      ].filter(([, value]) => value !== null && value !== undefined && value !== "")
+      ].filter(
+        ([, value]) =>
+          value !== null &&
+          value !== undefined &&
+          String(value).trim() !== ""
+      )
     : [];
 
   return (
@@ -67,6 +83,7 @@ export default function DoctorProfile() {
 
       <main className="doctor-profile-page" dir="rtl">
         <div className="container">
+
           <Link to="/#doctors" className="doctor-profile-back">
             ← العودة إلى الأطباء
           </Link>
@@ -91,11 +108,16 @@ export default function DoctorProfile() {
 
           {!loading && doctor && (
             <article className="doctor-profile">
+
+              {/* Doctor information */}
               <div className="doctor-profile__top">
+
                 <div className="doctor-profile__image">
                   {doctor.image || doctor.image_url ? (
                     <img
-                      src={getImageUrl(doctor.image || doctor.image_url)}
+                      src={getImageUrl(
+                        doctor.image || doctor.image_url
+                      )}
                       alt={doctor.name}
                     />
                   ) : (
@@ -110,18 +132,22 @@ export default function DoctorProfile() {
                     {doctor.title || doctor.specialty}
                   </p>
 
-                  {doctor.specialty && <p>{doctor.specialty}</p>}
+                  {doctor.specialty && (
+                    <p>{doctor.specialty}</p>
+                  )}
                 </div>
+
               </div>
 
-              {/* WhatsApp booking and QR code */}
+              {/* WhatsApp booking and doctor profile QR */}
               <section className="doctor-profile__booking">
+
                 <div className="doctor-profile__booking-info">
                   <h2>احجز موعدك الآن</h2>
 
                   <p>
-                    يمكنك التواصل مع العيادة مباشرة عبر واتساب لحجز موعد مع
-                    {` ${doctor.name}`}.
+                    يمكنك التواصل مع العيادة مباشرة عبر واتساب
+                    لحجز موعد مع {doctor.name}.
                   </p>
 
                   <a
@@ -135,19 +161,31 @@ export default function DoctorProfile() {
                   </a>
                 </div>
 
+                {/* QR code: opens the doctor's profile */}
                 <div className="doctor-profile__qr">
-                  <QRCodeSVG
-                    value={whatsappUrl}
-                    size={180}
-                    level="H"
-                    includeMargin
-                  />
 
-                  <strong>امسح الرمز للحجز عبر واتساب</strong>
-                  <span>سيتم فتح محادثة حجز مع العيادة</span>
+                  <div className="doctor-profile__qr-image">
+                    <QRCodeSVG
+                      value={profileUrl}
+                      size={190}
+                      level="H"
+                      includeMargin={true}
+                    />
+                  </div>
+
+                  <strong>
+                    امسح الرمز لعرض الملف الشخصي
+                  </strong>
+
+                  <span>
+                    تعرف على الطبيب ومؤهلاته ومواعيد العمل
+                  </span>
+
                 </div>
+
               </section>
 
+              {/* Doctor biography */}
               {doctor.bio && (
                 <section className="doctor-profile__section">
                   <h2>نبذة عن الطبيب</h2>
@@ -155,6 +193,7 @@ export default function DoctorProfile() {
                 </section>
               )}
 
+              {/* Qualifications */}
               {qualifications.length > 0 && (
                 <section className="doctor-profile__section">
                   <h2>المؤهلات والخبرات</h2>
@@ -170,6 +209,7 @@ export default function DoctorProfile() {
                 </section>
               )}
 
+              {/* Working schedule */}
               {Array.isArray(doctor.schedule) &&
                 doctor.schedule.length > 0 && (
                   <section className="doctor-profile__section">
@@ -185,8 +225,10 @@ export default function DoctorProfile() {
                     </div>
                   </section>
                 )}
+
             </article>
           )}
+
         </div>
       </main>
 
