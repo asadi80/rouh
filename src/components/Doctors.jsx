@@ -413,7 +413,127 @@ export default function Doctors() {
           </p>
         ) : (
           <div className="doctors__carousel">
-            {/* KEEP YOUR EXISTING CAROUSEL CODE HERE */}
+            <button
+              type="button"
+              className="doctors__arrow"
+              onClick={() => scrollByCards(1)}
+              aria-label="السابق"
+            >
+              <ChevronIcon />
+            </button>
+
+            <div className="doctors__track" ref={trackRef}>
+              {filtered.map((doctor) => {
+                const imageUrl = getDoctorImageUrl(doctor.image);
+
+                return (
+                  <article className="doctor-card" key={doctor.id}>
+                    <div className="doctor-card__top">
+                      {imageUrl ? (
+                        <img
+                          className="doctor-card__photo"
+                          src={imageUrl}
+                          alt={doctor.name}
+                          loading="lazy"
+                          onError={(event) => {
+                            event.currentTarget.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div className="doctor-card__avatar">
+                          {doctor.initials || doctor.name?.slice(0, 2) || "د"}
+                        </div>
+                      )}
+
+                      <div>
+                        <h3>{doctor.name}</h3>
+                        <p className="doctor-card__title">
+                          {doctor.title || doctor.specialty}
+                        </p>
+                      </div>
+                    </div>
+
+                    {doctor.specialty && (
+                      <span className="doctor-card__specialty">
+                        {doctor.specialty}
+                      </span>
+                    )}
+
+                    {doctor.bio && (
+                      <p className="doctor-card__bio">{doctor.bio}</p>
+                    )}
+
+                    <div className="doctor-card__schedule">
+                      <span className="doctor-card__schedule-label">
+                        مواعيد العمل
+                      </span>
+
+                      {Array.isArray(doctor.schedule) &&
+                      doctor.schedule.length > 0 ? (
+                        <ul>
+                          {doctor.schedule.map((item, index) => {
+                            if (typeof item === "string") {
+                              return (
+                                <li key={index}>
+                                  <span>{item}</span>
+                                </li>
+                              );
+                            }
+
+                            if (item.note) {
+                              return (
+                                <li
+                                  key={index}
+                                  className="doctor-card__schedule-note"
+                                >
+                                  {item.note}
+                                </li>
+                              );
+                            }
+
+                            return (
+                              <li key={index}>
+                                <span>{item.day}</span>
+                                <span className="doctor-card__schedule-time">
+                                  {formatScheduleTime(item.time)}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : (
+                        <p>يرجى التواصل لمعرفة المواعيد.</p>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="btn btn-primary doctor-card__cta"
+                      onClick={() => openPaymentModal(doctor)}
+                    >
+                      احجز موعدك
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn doctor-card__cta"
+                      onClick={() => openDoctorProfile(doctor)}
+                    >
+                      الملف الشخصي
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              className="doctors__arrow"
+              onClick={() => scrollByCards(-1)}
+              aria-label="التالي"
+            >
+              <ChevronIcon />
+            </button>
           </div>
         )}
       </div>
