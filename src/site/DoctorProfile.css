@@ -1,7 +1,6 @@
 
 /* =========================================================
-   DOCTOR PROFILE PAGE
-   Uses the same Rouhly main website theme
+   DOCTOR PROFILE — ROUHLY DESIGN SYSTEM
 ========================================================= */
 
 .doctor-profile-page {
@@ -9,27 +8,32 @@
   padding: 50px 0 90px;
   background: var(--sage-100);
   color: var(--ink);
-  box-sizing: border-box;
+  font-family: var(--font-body);
 }
 
 .doctor-profile-page .container {
-  width: min(100% - 40px, 1200px);
-  margin: 0 auto;
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 22px;
 }
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
 
 .doctor-profile-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
   color: var(--teal-700);
-  text-decoration: none;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
+  font-weight: 700;
+  transition: color 0.2s ease;
 }
 
 .doctor-profile-back:hover {
-  opacity: 0.75;
+  color: var(--teal-500);
 }
 
 /* =========================================================
@@ -37,14 +41,14 @@
 ========================================================= */
 
 .doctor-profile {
+  width: 100%;
   max-width: 950px;
-  margin: auto;
-  padding: 35px;
-  background: var(--surface, #ffffff);
+  margin-inline: auto;
+  padding: 36px;
+  background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow-sm);
-  box-sizing: border-box;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 /* =========================================================
@@ -66,15 +70,15 @@
   height: 220px;
   overflow: hidden;
   place-items: center;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   background: var(--sage-100);
   color: var(--teal-700);
+  font-family: var(--font-display);
   font-size: 45px;
   font-weight: 700;
 }
 
 .doctor-profile__image img {
-  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -86,8 +90,9 @@
 
 .doctor-profile__intro h1 {
   margin: 0 0 12px;
-  color: var(--ink);
-  font-size: clamp(24px, 4vw, 32px);
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-size: clamp(25px, 4vw, 34px);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
@@ -95,16 +100,17 @@
 .doctor-profile__intro p {
   margin: 8px 0;
   color: var(--ink-soft);
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.9;
 }
 
-.doctor-profile__title {
-  color: var(--teal-700) !important;
+.doctor-profile__intro .doctor-profile__title {
+  color: var(--teal-700);
   font-weight: 700;
 }
 
 /* =========================================================
-   WHATSAPP BOOKING
+   BOOKING SECTION
 ========================================================= */
 
 .doctor-profile__booking {
@@ -114,10 +120,9 @@
   gap: 35px;
   margin: 35px 0;
   padding: 30px;
-  background: var(--sage-100);
+  background: var(--cream);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  box-sizing: border-box;
+  border-radius: var(--radius-md);
 }
 
 .doctor-profile__booking-info {
@@ -126,14 +131,16 @@
 }
 
 .doctor-profile__booking-info h2 {
-  margin: 0 0 12px;
-  color: var(--teal-700);
-  font-size: 23px;
+  margin-bottom: 12px;
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-size: 24px;
 }
 
 .doctor-profile__booking-info p {
-  margin: 0 0 22px;
+  margin-bottom: 22px;
   color: var(--ink-soft);
+  font-size: 16px;
   line-height: 1.9;
 }
 
@@ -142,16 +149,16 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 24px;
+  padding: 14px 26px;
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-pill);
   background: #25d366;
-  color: #fff;
-  text-decoration: none;
-  font: inherit;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .doctor-profile__whatsapp:hover {
@@ -159,9 +166,14 @@
   transform: translateY(-2px);
 }
 
+.doctor-profile__whatsapp:active {
+  transform: scale(0.97);
+}
+
 .doctor-profile__whatsapp svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -170,17 +182,16 @@
 
 .doctor-profile__qr {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
   min-width: 210px;
   padding: 20px;
+  background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface, #ffffff);
+  border-radius: var(--radius-md);
   text-align: center;
-  box-sizing: border-box;
 }
 
 .doctor-profile__qr-image {
@@ -188,19 +199,20 @@
   align-items: center;
   justify-content: center;
   padding: 8px;
-  background: #ffffff;
-  border-radius: 10px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
 }
 
 .doctor-profile__qr strong {
-  color: var(--ink);
+  color: var(--teal-900);
+  font-family: var(--font-display);
   font-size: 14px;
 }
 
 .doctor-profile__qr span {
   color: var(--ink-soft);
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 /* =========================================================
@@ -218,20 +230,21 @@
 
 .doctor-profile__section h2 {
   margin: 0 0 20px;
-  color: var(--teal-700);
-  font-size: 21px;
-  line-height: 1.5;
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.doctor-profile__section p {
-  margin: 0;
+.doctor-profile__section > p {
   color: var(--ink-soft);
+  font-size: 16px;
   line-height: 2;
   overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   QUALIFICATIONS & DETAILS
+   QUALIFICATIONS
 ========================================================= */
 
 .doctor-profile__details {
@@ -245,21 +258,21 @@
   padding: 18px;
   background: var(--sage-100);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  box-sizing: border-box;
+  border-radius: var(--radius-sm);
 }
 
 .doctor-profile__details strong {
   display: block;
   margin-bottom: 8px;
   color: var(--teal-700);
-  font-size: 14px;
+  font-family: var(--font-display);
+  font-size: 15px;
 }
 
 .doctor-profile__details p {
-  margin: 0;
   color: var(--ink);
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.9;
   overflow-wrap: anywhere;
 }
 
@@ -270,6 +283,7 @@
 .doctor-profile__schedule {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .doctor-profile__schedule > div {
@@ -279,54 +293,49 @@
   gap: 15px;
   padding: 15px 18px;
   border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-sm);
 }
 
 .doctor-profile__schedule > div:nth-child(odd) {
   background: var(--sage-100);
-  border-radius: 8px;
-}
-
-.doctor-profile__schedule > div:last-child {
-  border-bottom: none;
 }
 
 .doctor-profile__schedule strong {
   flex-shrink: 0;
   color: var(--teal-700);
+  font-family: var(--font-display);
   font-weight: 700;
 }
 
 .doctor-profile__schedule span {
   color: var(--ink-soft);
   text-align: left;
-  line-height: 1.7;
+  line-height: 1.8;
   overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   LOADING STATE
+   LOADING
 ========================================================= */
 
 .doctor-profile-message {
-  padding: 50px 15px;
+  padding: 55px 15px;
   color: var(--ink-soft);
   text-align: center;
 }
 
 .doctor-profile-message p {
-  margin: 0;
-  line-height: 1.8;
+  line-height: 1.9;
 }
 
 .doctor-profile-loader {
-  width: 38px;
-  height: 38px;
-  margin: 0 auto 15px;
-  border: 4px solid var(--line);
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border: 4px solid var(--sage-300);
   border-top-color: var(--teal-700);
   border-radius: 50%;
   animation: doctorProfileSpin 0.8s linear infinite;
-  box-sizing: border-box;
 }
 
 @keyframes doctorProfileSpin {
@@ -343,12 +352,11 @@
   max-width: 650px;
   margin: 30px auto;
   padding: 35px 25px;
+  background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface, #ffffff);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   text-align: center;
-  box-sizing: border-box;
 }
 
 .doctor-profile-status--error {
@@ -356,36 +364,36 @@
 }
 
 .doctor-profile-status--error h2 {
-  margin: 0 0 12px;
+  margin-bottom: 12px;
   color: #b42318;
 }
 
 .doctor-profile-status--error p {
   color: var(--ink-soft);
-  line-height: 1.8;
+  line-height: 1.9;
 }
 
 .doctor-profile-retry {
-  margin-top: 15px;
-  padding: 12px 25px;
+  margin-top: 18px;
+  padding: 13px 26px;
   border: none;
-  border-radius: 30px;
+  border-radius: var(--radius-pill);
   background: var(--teal-700);
-  color: #fff;
-  font: inherit;
-  font-weight: 600;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .doctor-profile-retry:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  background: var(--teal-600);
+  transform: translateY(-2px);
 }
 
 /* =========================================================
    PAYMENT MODAL
-   Uses the same Rouhly theme
 ========================================================= */
 
 .payment-modal__overlay {
@@ -396,9 +404,8 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgb(0 0 0 / 55%);
+  background: rgb(16 63 63 / 55%);
   overflow-y: auto;
-  box-sizing: border-box;
 }
 
 .payment-modal {
@@ -408,11 +415,10 @@
   max-height: calc(100vh - 40px);
   padding: 30px;
   overflow-y: auto;
+  background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--surface, #ffffff);
-  box-shadow: var(--shadow-sm);
-  box-sizing: border-box;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .payment-modal__close {
@@ -426,35 +432,37 @@
   border: none;
   border-radius: 50%;
   background: var(--sage-100);
-  color: var(--ink);
+  color: var(--teal-900);
   font-size: 24px;
   cursor: pointer;
 }
 
 .payment-modal h2 {
-  margin: 0 0 10px;
+  margin-bottom: 10px;
   padding-left: 35px;
-  color: var(--teal-700);
-  font-size: 22px;
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-size: 23px;
 }
 
 .payment-modal__intro {
-  margin: 0 0 20px;
+  margin-bottom: 20px;
   color: var(--ink-soft);
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .payment-modal__bank {
   padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
   background: var(--sage-100);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
 }
 
 .payment-modal__bank h3 {
-  margin: 0 0 15px;
-  color: var(--teal-700);
-  font-size: 17px;
+  margin-bottom: 15px;
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-size: 18px;
 }
 
 .payment-modal__row,
@@ -467,31 +475,27 @@
   border-bottom: 1px solid var(--line);
 }
 
-.payment-modal__row:last-child {
-  border-bottom: none;
-}
-
 .payment-modal__row span,
 .payment-modal__fee span {
   flex-shrink: 0;
   color: var(--ink-soft);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .payment-modal__row strong,
 .payment-modal__fee strong {
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   text-align: left;
   overflow-wrap: anywhere;
 }
 
 .payment-modal__fee {
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 15px;
+  background: var(--white);
   border: none;
-  border-radius: 10px;
-  background: var(--surface, #ffffff);
+  border-radius: var(--radius-sm);
 }
 
 .payment-modal__fee strong {
@@ -505,15 +509,15 @@
 }
 
 .payment-modal__note {
-  margin: 15px 0 0;
+  margin-top: 15px;
   color: var(--ink-soft);
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.9;
   text-align: center;
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN — TABLETS
+   TABLET RESPONSIVE
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -534,14 +538,10 @@
     width: 160px;
     height: 200px;
   }
-
-  .doctor-profile__details {
-    gap: 12px;
-  }
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN — MOBILE
+   MOBILE RESPONSIVE
 ========================================================= */
 
 @media (max-width: 650px) {
@@ -550,16 +550,12 @@
   }
 
   .doctor-profile-page .container {
-    width: min(100% - 28px, 1200px);
-  }
-
-  .doctor-profile-back {
-    margin-bottom: 20px;
+    padding-inline: 14px;
   }
 
   .doctor-profile {
     padding: 20px;
-    border-radius: 16px;
+    border-radius: var(--radius-md);
   }
 
   .doctor-profile__top {
@@ -580,18 +576,12 @@
   .doctor-profile__booking {
     flex-direction: column;
     align-items: stretch;
-    gap: 25px;
     padding: 20px;
     text-align: center;
   }
 
-  .doctor-profile__booking-info h2 {
-    font-size: 21px;
-  }
-
   .doctor-profile__whatsapp {
     width: 100%;
-    box-sizing: border-box;
   }
 
   .doctor-profile__qr {
@@ -616,6 +606,7 @@
 
   .payment-modal {
     padding: 25px 18px;
+    border-radius: var(--radius-md);
   }
 
   .payment-modal__row,
@@ -631,7 +622,7 @@
 }
 
 /* =========================================================
-   SMALL MOBILE SCREENS
+   EXTRA SMALL SCREENS
 ========================================================= */
 
 @media (max-width: 380px) {
