@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useClinicData } from "../contexts/ClinicDataContext";
 import { WhatsappIcon, CalendarIcon, ChevronIcon } from "./Icons";
 import "./Doctors.css";
@@ -100,6 +101,12 @@ export default function Doctors() {
 
   const trackRef = useRef(null);
   const receiptInputRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  function openDoctorProfile(doctor) {
+    navigate(`/doctors/${doctor.id}`);
+  }
 
   // Get unique specialties from active doctors
   const specialties = useMemo(() => {
@@ -378,7 +385,20 @@ export default function Doctors() {
                 const imageUrl = getDoctorImageUrl(doc.image);
 
                 return (
-                  <article className="doctor-card" key={doc.id}>
+                  <article
+                    className="doctor-card doctor-card--clickable"
+                    key={doc.id}
+                    onClick={() => openDoctorProfile(doc)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        openDoctorProfile(doc);
+                      }
+                    }}
+                    role="link"
+                    tabIndex={0}
+                    aria-label={`عرض الملف الشخصي للطبيب ${doc.name}`}
+                  >
+                    {" "}
                     <div className="doctor-card__top">
                       {imageUrl ? (
                         <img
@@ -412,13 +432,10 @@ export default function Doctors() {
                         <p className="doctor-card__title">{doc.title}</p>
                       </div>
                     </div>
-
                     <span className="doctor-card__specialty">
                       {doc.specialty}
                     </span>
-
                     <p className="doctor-card__bio">{doc.bio}</p>
-
                     <div className="doctor-card__schedule">
                       <span className="doctor-card__schedule-label">
                         مواعيد العيادة
@@ -449,11 +466,13 @@ export default function Doctors() {
                         )}
                       </ul>
                     </div>
-
                     <button
                       className="btn btn-primary doctor-card__cta"
                       type="button"
-                      onClick={() => openPaymentModal(doc)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openPaymentModal(doc);
+                      }}
                     >
                       <WhatsappIcon /> احجز عبر واتساب
                     </button>

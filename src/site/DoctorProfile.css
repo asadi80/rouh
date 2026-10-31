@@ -1,0 +1,122 @@
+.doctor-profile-page {
+  min-height: 70vh;
+  padding: 50px 0 90px;
+  background: var(--sage-100);
+}
+
+.doctor-profile-back {
+  display: inline-block;
+  margin-bottom: 30px;
+  color: var(--teal-700);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.doctor-profile {
+  max-width: 950px;
+  margin: auto;
+  padding: 35px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.doctor-profile__top {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+}
+
+.doctor-profile__image {
+  width: 190px;
+  height: 220px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--sage-100);
+  display: grid;
+  place-items: center;
+  font-size: 45px;
+  color: var(--teal-700);
+}
+
+.doctor-profile__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctor-profile__intro h1 {
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.doctor-profile__title {
+  color: var(--teal-700);
+  font-weight: 700;
+}
+
+.doctor-profile__section {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.doctor-profile__section h2 {
+  margin: 0 0 20px;
+  color: var(--teal-700);
+  font-size: 21px;
+}
+
+.doctor-profile__section p {
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+.doctor-profile__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.doctor-profile__details strong {
+  color: var(--ink);
+}
+
+.doctor-profile__schedule > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.doctor-profile-message {
+  text-align: center;
+  padding: 50px 15px;
+}
+
+.doctor-profile-error {
+  color: #b42318;
+}
+
+@media (max-width: 600px) {
+  .doctor-profile {
+    padding: 20px;
+  }
+
+  .doctor-profile__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .doctor-profile__image {
+    width: 100%;
+    height: 280px;
+  }
+
+  .doctor-profile__details {
+    grid-template-columns: 1fr;
+  }
+}
