@@ -602,12 +602,12 @@ export default function Doctors() {
             <label className="payment-modal__upload">
               <span>إرفاق صورة إيصال التحويل</span>
 
-              <input
+              {/* <input
                 ref={receiptInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleReceiptChange}
-              />
+              /> */}
 
               <span className="payment-modal__upload-hint">
                 اختر صورة الإيصال من هاتفك أو جهازك (10 ميجابايت كحد أقصى).
