@@ -1,26 +1,102 @@
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { useClinicData } from "../contexts/ClinicDataContext";
 import { WhatsappIcon } from "../components/Icons";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./DoctorProfile.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://api.rouh.ly";
+const API_URL = (
+  import.meta.env.VITE_API_URL || "https://api.rouh.ly"
+).replace(/\/$/, "");
+
 const WHATSAPP_NUMBER = "218916669082";
 
 export default function DoctorProfile() {
   const { id } = useParams();
-  const { doctors = [], loading, error } = useClinicData();
 
-  const doctor = useMemo(
-    () => doctors.find((item) => String(item.id) === String(id)),
-    [doctors, id]
-  );
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // WhatsApp booking link for this doctor
+  // --------------------------------------------------
+  // FETCH DOCTOR DATA DIRECTLY FROM THE API
+  // --------------------------------------------------
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchDoctor() {
+      try {
+        setLoading(true);
+        setError("");
+        setDoctor(null);
+
+        const response = await fetch(`${API_URL}/api/doctors`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `تعذر تحميل بيانات الأطباء (${response.status})`
+          );
+        }
+
+        const result = await response.json();
+
+        // Support different common API response formats
+        const doctors = Array.isArray(result)
+          ? result
+          : Array.isArray(result.data)
+          ? result.data
+          : Array.isArray(result.doctors)
+          ? result.doctors
+          : [];
+
+        if (!doctors.length) {
+          throw new Error("لم يتم العثور على بيانات الأطباء");
+        }
+
+        const foundDoctor = doctors.find(
+          (item) => String(item.id) === String(id)
+        );
+
+        if (!foundDoctor) {
+          setError("لم يتم العثور على الطبيب المطلوب.");
+          return;
+        }
+
+        setDoctor(foundDoctor);
+      } catch (err) {
+        if (err.name === "AbortError") return;
+
+        console.error("Doctor profile loading error:", err);
+
+        setError(
+          err.message ||
+          "حدث خطأ أثناء تحميل بيانات الطبيب. يرجى المحاولة مرة أخرى."
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchDoctor();
+
+    return () => controller.abort();
+  }, [id]);
+
+  // --------------------------------------------------
+  // WHATSAPP BOOKING LINK
+  // --------------------------------------------------
+
   const whatsappUrl = useMemo(() => {
     if (!doctor) return "";
 
@@ -31,17 +107,27 @@ export default function DoctorProfile() {
       "رسوم الكشف: 150 دينار ليبي",
     ].join("\n");
 
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      message
+    )}`;
   }, [doctor]);
 
-  // QR code opens the doctor's profile on your website
+  // --------------------------------------------------
+  // DOCTOR PROFILE QR CODE URL
+  // --------------------------------------------------
+
   const profileUrl = useMemo(() => {
     if (!doctor || typeof window === "undefined") return "";
 
-    return `${window.location.origin}/doctors/${encodeURIComponent(doctor.id)}`;
+    return `${window.location.origin}/doctors/${encodeURIComponent(
+      doctor.id
+    )}`;
   }, [doctor]);
 
-  // Resolve doctor image URL
+  // --------------------------------------------------
+  // DOCTOR IMAGE URL
+  // --------------------------------------------------
+
   const getImageUrl = (image) => {
     if (!image) return "";
 
@@ -52,7 +138,10 @@ export default function DoctorProfile() {
     return `${API_URL}${image.startsWith("/") ? "" : "/"}${image}`;
   };
 
-  // Doctor qualifications
+  // --------------------------------------------------
+  // DOCTOR QUALIFICATIONS
+  // --------------------------------------------------
+
   const qualifications = doctor
     ? [
         ["الجامعة / كلية الطب", doctor.medical_school],
@@ -77,6 +166,10 @@ export default function DoctorProfile() {
       )
     : [];
 
+  // --------------------------------------------------
+  // PAGE
+  // --------------------------------------------------
+
   return (
     <>
       <Header />
@@ -88,28 +181,34 @@ export default function DoctorProfile() {
             ← العودة إلى الأطباء
           </Link>
 
+          {/* LOADING */}
           {loading && (
-            <p className="doctor-profile-message">
-              جارٍ تحميل الملف الشخصي...
-            </p>
+            <div className="doctor-profile-message">
+              <div className="doctor-profile-loader" />
+              <p>جارٍ تحميل بيانات الطبيب...</p>
+            </div>
           )}
 
+          {/* ERROR */}
           {!loading && error && (
-            <p className="doctor-profile-message doctor-profile-error">
-              تعذر تحميل بيانات الأطباء
-            </p>
+            <div className="doctor-profile-status doctor-profile-status--error">
+              <h2>تعذر تحميل الملف الشخصي</h2>
+              <p>{error}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="doctor-profile-retry"
+              >
+                إعادة المحاولة
+              </button>
+            </div>
           )}
 
-          {!loading && !error && !doctor && (
-            <p className="doctor-profile-message">
-              لم يتم العثور على الطبيب
-            </p>
-          )}
-
-          {!loading && doctor && (
+          {/* DOCTOR PROFILE */}
+          {!loading && !error && doctor && (
             <article className="doctor-profile">
 
-              {/* Doctor information */}
+              {/* DOCTOR HEADER */}
               <div className="doctor-profile__top">
 
                 <div className="doctor-profile__image">
@@ -118,7 +217,10 @@ export default function DoctorProfile() {
                       src={getImageUrl(
                         doctor.image || doctor.image_url
                       )}
-                      alt={doctor.name}
+                      alt={doctor.name || "صورة الطبيب"}
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
                     />
                   ) : (
                     <span>{doctor.initials || "د"}</span>
@@ -139,7 +241,7 @@ export default function DoctorProfile() {
 
               </div>
 
-              {/* WhatsApp booking and doctor profile QR */}
+              {/* BOOKING AND QR CODE */}
               <section className="doctor-profile__booking">
 
                 <div className="doctor-profile__booking-info">
@@ -161,7 +263,6 @@ export default function DoctorProfile() {
                   </a>
                 </div>
 
-                {/* QR code: opens the doctor's profile */}
                 <div className="doctor-profile__qr">
 
                   <div className="doctor-profile__qr-image">
@@ -185,7 +286,7 @@ export default function DoctorProfile() {
 
               </section>
 
-              {/* Doctor biography */}
+              {/* BIOGRAPHY */}
               {doctor.bio && (
                 <section className="doctor-profile__section">
                   <h2>نبذة عن الطبيب</h2>
@@ -193,7 +294,7 @@ export default function DoctorProfile() {
                 </section>
               )}
 
-              {/* Qualifications */}
+              {/* QUALIFICATIONS */}
               {qualifications.length > 0 && (
                 <section className="doctor-profile__section">
                   <h2>المؤهلات والخبرات</h2>
@@ -209,7 +310,7 @@ export default function DoctorProfile() {
                 </section>
               )}
 
-              {/* Working schedule */}
+              {/* WORKING SCHEDULE */}
               {Array.isArray(doctor.schedule) &&
                 doctor.schedule.length > 0 && (
                   <section className="doctor-profile__section">

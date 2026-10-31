@@ -280,3 +280,67 @@
     flex-wrap: wrap;
   }
 }
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.doctor-profile-loader {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 15px;
+  border: 4px solid var(--line, #e5e5e5);
+  border-top-color: var(--teal-700);
+  border-radius: 50%;
+  animation: doctorProfileSpin 0.8s linear infinite;
+}
+
+@keyframes doctorProfileSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   ERROR STATE
+========================================================= */
+
+.doctor-profile-status {
+  max-width: 650px;
+  margin: 30px auto;
+  padding: 35px 25px;
+  border-radius: 16px;
+  text-align: center;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.doctor-profile-status--error {
+  border: 1px solid #f1c5c2;
+}
+
+.doctor-profile-status--error h2 {
+  margin: 0 0 12px;
+  color: #b42318;
+}
+
+.doctor-profile-status--error p {
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.doctor-profile-retry {
+  margin-top: 15px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  background: var(--teal-700);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.doctor-profile-retry:hover {
+  opacity: 0.9;
+}
