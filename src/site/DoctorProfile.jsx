@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+
+import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useClinicData } from "../contexts/ClinicDataContext";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./DoctorProfile.css";
@@ -9,50 +11,41 @@ const API_URL = import.meta.env.VITE_API_URL || "https://api.rouh.ly";
 export default function DoctorProfile() {
   const { id } = useParams();
 
-  const [doctor, setDoctor] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { doctors = [], loading, error } = useClinicData();
 
-  useEffect(() => {
-    const fetchDoctor = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  // Find doctor from ClinicDataContext
+  const doctor = useMemo(
+    () => doctors.find((item) => String(item.id) === String(id)),
+    [doctors, id]
+  );
 
-        const response = await fetch(`${API_URL}/api/doctors`);
-
-        if (!response.ok) {
-          throw new Error("تعذر تحميل بيانات الأطباء");
-        }
-
-        const doctors = await response.json();
-
-        const selectedDoctor = doctors.find(
-          (item) => String(item.id) === String(id),
-        );
-
-        if (!selectedDoctor) {
-          throw new Error("لم يتم العثور على الطبيب");
-        }
-
-        setDoctor(selectedDoctor);
-      } catch (err) {
-        setError(err.message || "حدث خطأ أثناء تحميل البيانات");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDoctor();
-  }, [id]);
-
+  // Support local uploads and external image URLs
   const getImageUrl = (image) => {
     if (!image) return "";
 
-    if (image.startsWith("http")) return image;
+    if (/^https?:\/\//i.test(image)) return image;
 
     return `${API_URL}${image.startsWith("/") ? "" : "/"}${image}`;
   };
+
+  const qualifications = doctor
+    ? [
+        ["الجامعة / كلية الطب", doctor.medical_school],
+        ["المؤهل العلمي", doctor.degree],
+        ["سنة التخرج", doctor.graduation_year],
+        ["سنوات الخبرة", doctor.years_experience],
+        ["المؤهلات العليا", doctor.postgraduate_qualifications],
+        ["الإقامة والزمالة", doctor.residency_fellowship],
+        ["الشهادات المهنية", doctor.board_certifications],
+        ["التخصص الدقيق", doctor.subspecialty],
+        [
+          "اللغات",
+          Array.isArray(doctor.languages)
+            ? doctor.languages.join("، ")
+            : doctor.languages,
+        ],
+      ].filter(([, value]) => value !== null && value !== undefined && value !== "")
+    : [];
 
   return (
     <>
@@ -65,12 +58,20 @@ export default function DoctorProfile() {
           </Link>
 
           {loading && (
-            <p className="doctor-profile-message">جارٍ تحميل الملف الشخصي...</p>
+            <p className="doctor-profile-message">
+              جارٍ تحميل الملف الشخصي...
+            </p>
           )}
 
           {!loading && error && (
             <p className="doctor-profile-message doctor-profile-error">
-              {error}
+              تعذر تحميل بيانات الأطباء
+            </p>
+          )}
+
+          {!loading && !error && !doctor && (
+            <p className="doctor-profile-message">
+              لم يتم العثور على الطبيب
             </p>
           )}
 
@@ -90,9 +91,11 @@ export default function DoctorProfile() {
 
                 <div className="doctor-profile__intro">
                   <h1>{doctor.name}</h1>
+
                   <p className="doctor-profile__title">
                     {doctor.title || doctor.specialty}
                   </p>
+
                   {doctor.specialty && <p>{doctor.specialty}</p>}
                 </div>
               </div>
@@ -104,70 +107,36 @@ export default function DoctorProfile() {
                 </section>
               )}
 
-              {[
-                ["الجامعة / كلية الطب", doctor.medical_school],
-                ["المؤهل العلمي", doctor.degree],
-                ["سنة التخرج", doctor.graduation_year],
-                ["سنوات الخبرة", doctor.years_experience],
-                ["المؤهلات العليا", doctor.postgraduate_qualifications],
-                ["الإقامة والزمالة", doctor.residency_fellowship],
-                ["الشهادات المهنية", doctor.board_certifications],
-                ["التخصص الدقيق", doctor.subspecialty],
-                [
-                  "اللغات",
-                  Array.isArray(doctor.languages)
-                    ? doctor.languages.join("، ")
-                    : doctor.languages,
-                ],
-              ].some(([, value]) => value) && (
+              {qualifications.length > 0 && (
                 <section className="doctor-profile__section">
                   <h2>المؤهلات والخبرات</h2>
 
                   <div className="doctor-profile__details">
-                    {[
-                      ["الجامعة / كلية الطب", doctor.medical_school],
-                      ["المؤهل العلمي", doctor.degree],
-                      ["سنة التخرج", doctor.graduation_year],
-                      ["سنوات الخبرة", doctor.years_experience],
-                      ["المؤهلات العليا", doctor.postgraduate_qualifications],
-                      ["الإقامة والزمالة", doctor.residency_fellowship],
-                      ["الشهادات المهنية", doctor.board_certifications],
-                      ["التخصص الدقيق", doctor.subspecialty],
-                      [
-                        "اللغات",
-                        Array.isArray(doctor.languages)
-                          ? doctor.languages.join("، ")
-                          : doctor.languages,
-                      ],
-                    ]
-                      .filter(
-                        ([, value]) =>
-                          value !== null && value !== undefined && value !== "",
-                      )
-                      .map(([label, value]) => (
-                        <div key={label}>
-                          <strong>{label}</strong>
-                          <p>{value}</p>
-                        </div>
-                      ))}
-                  </div>
-                </section>
-              )}
-
-              {Array.isArray(doctor.schedule) && doctor.schedule.length > 0 && (
-                <section className="doctor-profile__section">
-                  <h2>مواعيد العمل</h2>
-
-                  <div className="doctor-profile__schedule">
-                    {doctor.schedule.map((item, index) => (
-                      <div key={index}>
-                        <strong>{item.day || "موعد"}</strong>
-                        <span>{item.time || item.note}</span>
+                    {qualifications.map(([label, value]) => (
+                      <div key={label}>
+                        <strong>{label}</strong>
+                        <p>{value}</p>
                       </div>
                     ))}
                   </div>
                 </section>
               )}
+
+              {Array.isArray(doctor.schedule) &&
+                doctor.schedule.length > 0 && (
+                  <section className="doctor-profile__section">
+                    <h2>مواعيد العمل</h2>
+
+                    <div className="doctor-profile__schedule">
+                      {doctor.schedule.map((item, index) => (
+                        <div key={index}>
+                          <strong>{item.day || "موعد"}</strong>
+                          <span>{item.time || item.note}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
             </article>
           )}
         </div>
